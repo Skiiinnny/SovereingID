@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="NetArchTest.Rules" Version="1.3.2" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\legacy\SovereignID.Crypto\SovereignID.Crypto.csproj" />
+    <ProjectReference Include="..\..\..\src\legacy\SovereignID.Chain\SovereignID.Chain.csproj" />
+    <ProjectReference Include="..\..\..\src\legacy\SovereignID.Demo.Phase1\SovereignID.Demo.Phase1.csproj" />
+    <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Infrastructure\SovereignID.SharedKernel.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Domain\SovereignID.Auth.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Application\SovereignID.Auth.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Infrastructure\SovereignID.Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-issuer\SovereignID.Issuer.Domain\SovereignID.Issuer.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-issuer\SovereignID.Issuer.Application\SovereignID.Issuer.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-issuer\SovereignID.Issuer.Infrastructure\SovereignID.Issuer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-verifier\SovereignID.Verifier.Domain\SovereignID.Verifier.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-verifier\SovereignID.Verifier.Application\SovereignID.Verifier.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\bc-verifier\SovereignID.Verifier.Infrastructure\SovereignID.Verifier.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

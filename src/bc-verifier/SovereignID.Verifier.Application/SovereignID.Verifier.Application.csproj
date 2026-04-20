@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nethereum.Web3" Version="4.26.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SovereignID.Crypto\SovereignID.Crypto.csproj" />
+    <ProjectReference Include="..\SovereignID.Verifier.Domain\SovereignID.Verifier.Domain.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
   </ItemGroup>
 
 </Project>

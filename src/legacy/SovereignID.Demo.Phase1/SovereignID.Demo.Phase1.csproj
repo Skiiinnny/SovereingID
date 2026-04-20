@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\SovereignID.Crypto\SovereignID.Crypto.csproj" />
-    <ProjectReference Include="..\SovereignID.Chain\SovereignID.Chain.csproj" />
+    <ProjectReference Include="..\..\legacy\SovereignID.Crypto\SovereignID.Crypto.csproj" />
+    <ProjectReference Include="..\..\legacy\SovereignID.Chain\SovereignID.Chain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
