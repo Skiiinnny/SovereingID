@@ -1,0 +1,30 @@
+## Build
+bin/
+obj/
+out/
+*.user
+*.suo
+*.cache
+*.log
+TestResults/
+coverage/
+
+## IDE
+.vs/
+.idea/
+*.DotSettings.user
+
+## OS
+Thumbs.db
+Desktop.ini
+
+## Secrets & local config (never commit keys or RPC URLs)
+appsettings.Development.json
+**/appsettings.Development.json
+.env
+.env.*
+!.env.example
+
+## NuGet
+*.nupkg
+/.cursor

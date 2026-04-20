@@ -1,0 +1,92 @@
+schema: spec-driven
+
+# Inyectado en las instrucciones de todos los artefactos (proposal, specs, design, tasks).
+context: |
+  # SovereignID — Project Definition
+
+  > OpenSpec project file · Version 1.0 · April 2026
+
+  ## Overview
+
+  **SovereignID** is a .NET platform for decentralized, self-sovereign digital identity.
+  It enables authentication without passwords and without dependency on centralized providers
+  (Google, Microsoft, Apple), using open cryptographic standards and public blockchain infrastructure.
+
+  ## Problem
+
+  Current federated identity (OAuth/OIDC via big tech) has three structural problems:
+  - **Dependency**: account suspension = loss of access to all connected services
+  - **Surveillance**: providers track every login, every service used
+  - **No portability**: identity belongs to the provider, not the user
+
+  On the enterprise side: financial institutions spend $48M+ annually on redundant KYC processes
+  taking 3–5 days per user. The same identity verification is repeated from scratch at every entity.
+
+  ## Solution
+
+  Three composable layers:
+
+  1. **SIWE Authentication** — Sign-In with Ethereum (EIP-4361). Users authenticate by signing
+     a challenge with their private key. No password. No central authority. Zero gas cost.
+
+  2. **Verifiable Credentials (W3C VC)** — Cryptographically signed credential documents held
+     by the user in their own wallet. Issued by trusted entities, verified by anyone, without
+     contacting the issuer.
+
+  3. **Selective Disclosure** — Users prove specific attributes ("over 18", "KYC approved",
+     "has degree") without revealing underlying personal data.
+
+  ## Target Users
+
+  | Role | Description |
+  |------|-------------|
+  | **Issuers** | Universities, KYC providers, professional bodies that issue VCs |
+  | **Holders** | End users who store and present credentials |
+  | **Verifiers** | Apps and enterprises that validate credentials via API |
+  | **Developers** | .NET teams integrating sovereign auth into their products |
+
+  ## Goals
+
+  ### Primary (MVP — 20 weeks)
+  - [ ] Working SIWE authentication flow (C# / ASP.NET Core)
+  - [ ] W3C-compliant VC issuance and verification
+  - [ ] Full issuer → holder → verifier triangle demo
+  - [ ] Portable KYC use case with credential revocation
+  - [ ] Public deployment on Sepolia testnet (zero cost)
+
+  ### Secondary (Post-MVP)
+  - [ ] Blazor UI wallet for credential management
+  - [ ] Selective disclosure via BBS+ signatures
+  - [ ] Multi-chain support (Polygon, Base)
+  - [ ] SDK NuGet package for third-party integration
+  - [ ] Commercial API with per-verification billing
+
+  ## Out of Scope (v1)
+
+  - Zero-knowledge proofs (ZK-SNARKs / STARKs)
+  - Account abstraction / ERC-4337
+  - Mobile native app
+  - Mainnet deployment (Sepolia only for now)
+  - GDPR compliance tooling
+
+  ## Tech Stack
+
+  | Layer | Technology |
+  |-------|-----------|
+  | Language | C# / .NET 9 |
+  | Blockchain lib | Nethereum |
+  | Auth protocol | SIWE (EIP-4361) via Nethereum.Templates.Siwe |
+  | Identity standard | W3C DID Core + W3C Verifiable Credentials |
+  | DID method | did:ethr (Ethereum-based) |
+  | API | ASP.NET Core Web API |
+  | UI (optional) | Blazor WebAssembly |
+  | Smart contracts | Solidity (minimal — revocation registry only) |
+  | Testnet | Ethereum Sepolia |
+  | Deployment | Railway / Render (free tier) |
+
+  ## Success Metrics
+
+  - End-to-end demo working and publicly accessible
+  - GitHub repo with clear README, architecture diagram, and setup guide
+  - 3-minute video walkthrough of the full flow
+  - At least one real verification call from a third-party integration
