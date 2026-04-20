@@ -119,6 +119,20 @@ dotnet test SovereignID.sln --filter "Category=Integration"
 
 Tests are skipped automatically when required variables are missing, so CI stays green without secrets.
 
+### SonarCloud in CI
+
+The repository includes a dedicated workflow at `.github/workflows/sonarqube.yml`.
+
+- Triggered on `push` to `main` and on `pull_request` (`opened`, `synchronize`, `reopened`).
+- Uses `dotnet-sonarscanner` on `windows-latest` with cache enabled.
+- Requires the `SONAR_TOKEN` secret configured in the repository settings.
+
+PR verification checklist:
+
+1. Open or update a PR targeting `main`.
+2. Confirm both workflows complete successfully: `dotnet` and `SonarQube`.
+3. Confirm SonarCloud reports the analysis for the PR branch with no token/auth errors.
+
 ### Deploying `Notary.sol`
 
 Compile `contracts/Notary.sol` in [Remix](https://remix.ethereum.org/) (or your toolchain), deploy to Sepolia, and export `NOTARY_CONTRACT_ADDRESS`. Request Sepolia ETH from a public faucet (for example [sepoliafaucet.com](https://www.sepoliafaucet.com/)) before sending transactions.
