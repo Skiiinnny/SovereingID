@@ -42,15 +42,35 @@ Full architecture: [openspec/specs/architecture.md](openspec/specs/architecture.
 ```
 SovereignID.sln
 src/
-  SovereignID.Crypto/        # keys, personal_sign, SHA-256 helpers
-  SovereignID.Chain/         # Sepolia RPC + Notary client
-  SovereignID.Demo.Phase1/    # runnable console walkthrough
+  shared/
+    SovereignID.SharedKernel.Domain/
+    SovereignID.SharedKernel.Application/
+    SovereignID.SharedKernel.Infrastructure/
+  bc-auth/
+    SovereignID.Auth.Domain/
+    SovereignID.Auth.Application/
+    SovereignID.Auth.Infrastructure/
+  bc-issuer/
+    SovereignID.Issuer.Domain/
+    SovereignID.Issuer.Application/
+    SovereignID.Issuer.Infrastructure/
+  bc-verifier/
+    SovereignID.Verifier.Domain/
+    SovereignID.Verifier.Application/
+    SovereignID.Verifier.Infrastructure/
+  legacy/                    # frozen Phase 1 code, not referenced by new code
+    SovereignID.Crypto/
+    SovereignID.Chain/
+    SovereignID.Demo.Phase1/
 tests/
-  SovereignID.Crypto.Tests/
-  SovereignID.Chain.Tests/   # includes optional Sepolia integration tests
+  architecture/SovereignID.Architecture.Tests/
+  legacy/SovereignID.Crypto.Tests/
+  legacy/SovereignID.Chain.Tests/  # includes optional Sepolia integration tests
 contracts/
   Notary.sol                   # minimal on-chain hash registry
 ```
+
+Architecture rules are specified in `openspec/specs/solution-architecture/spec.md`.
 
 ## Quick Start
 
@@ -63,7 +83,7 @@ cd sovereign-id-openspec
 dotnet restore SovereignID.sln
 dotnet test SovereignID.sln
 
-dotnet run --project src/SovereignID.Demo.Phase1
+dotnet run --project src/legacy/SovereignID.Demo.Phase1
 ```
 
 ### Local configuration (optional)
@@ -71,7 +91,7 @@ dotnet run --project src/SovereignID.Demo.Phase1
 `appsettings.Development.json` is ignored by git. Copy the example file and fill only non-secret defaults if you prefer files over environment variables:
 
 ```bash
-cp src/SovereignID.Demo.Phase1/appsettings.Development.example.json src/SovereignID.Demo.Phase1/appsettings.Development.json
+cp src/legacy/SovereignID.Demo.Phase1/appsettings.Development.example.json src/legacy/SovereignID.Demo.Phase1/appsettings.Development.json
 ```
 
 Never commit private keys. Prefer environment variables:
@@ -88,7 +108,7 @@ PowerShell example:
 
 ```powershell
 $env:SEPOLIA_RPC_URL="https://sepolia.infura.io/v3/<YOUR_KEY>"
-dotnet run --project src/SovereignID.Demo.Phase1
+dotnet run --project src/legacy/SovereignID.Demo.Phase1
 ```
 
 ### Integration tests (Sepolia)
