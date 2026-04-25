@@ -69,6 +69,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.Infrastructure.Tests", "tests\bc-auth\SovereignID.Auth.Infrastructure.Tests\SovereignID.Auth.Infrastructure.Tests.csproj", "{A7FF12E6-11BF-4863-A38A-9875A668F41D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.Api", "src\bc-auth\SovereignID.Auth.Api\SovereignID.Auth.Api.csproj", "{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.IntegrationTests", "tests\bc-auth\SovereignID.Auth.IntegrationTests\SovereignID.Auth.IntegrationTests.csproj", "{B33442F3-4E31-495A-8236-B3FFE86C8BAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -331,6 +335,30 @@ Global
 		{A7FF12E6-11BF-4863-A38A-9875A668F41D}.Release|x64.Build.0 = Release|Any CPU
 		{A7FF12E6-11BF-4863-A38A-9875A668F41D}.Release|x86.ActiveCfg = Release|Any CPU
 		{A7FF12E6-11BF-4863-A38A-9875A668F41D}.Release|x86.Build.0 = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|x64.Build.0 = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9}.Release|x86.Build.0 = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x64.Build.0 = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -362,5 +390,7 @@ Global
 		{C8E42992-5E42-0C2B-DBFE-AA848D06431C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{BC1CF367-17BA-44BA-A41C-E885CE485268} = {7D8832CF-06AF-CF9F-159A-6989E24D2996}
 		{A7FF12E6-11BF-4863-A38A-9875A668F41D} = {7D8832CF-06AF-CF9F-159A-6989E24D2996}
+		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9} = {51B5EDA5-A39B-A1B2-45D2-ED995464DF85}
+		{B33442F3-4E31-495A-8236-B3FFE86C8BAF} = {7D8832CF-06AF-CF9F-159A-6989E24D2996}
 	EndGlobalSection
 EndGlobal

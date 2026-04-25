@@ -9,7 +9,7 @@
 
 ### 1.1 Pre-flight
 - [x] Confirm `dotnet test SovereignID.sln` is green on `main` (baseline).
-- [ ] Create working branch `feature/phase-2-siwe-auth` from `main`.
+- [x] Create working branch `feature/phase-2-siwe-auth` from `main`.
 - [x] Verify architecture tests still pass (Phase 2 starts from a clean slate).
 
 ### 1.2 Auth.Domain — value objects
@@ -104,10 +104,10 @@
 ### 2.2 InMemoryAuthChallengeRepository
 - [x] Implement `InMemoryAuthChallengeRepository : IAuthChallengeRepository`
   backed by `ConcurrentDictionary<Nonce, AuthChallenge>`.
-- [ ] Register as `Singleton` in DI (done in `Auth.Api` wiring later).
+- [x] Register as `Singleton` in DI (done in `Auth.Api` wiring later).
 - [x] Implement periodic eviction using `PeriodicTimer` (1-min tick);
   evict challenges whose `ExpiresAt` ≤ current `IClock` time.
-- [ ] Eviction loop is started via `IHostedService` registered alongside
+- [x] Eviction loop is started via `IHostedService` registered alongside
   the repository so tests can opt out when needed.
 - [x] Unit test: `SaveAsync` + `FindByNonceAsync` round-trip.
 - [x] Unit test: `DeleteAsync` makes `FindByNonceAsync` return null.
@@ -171,16 +171,16 @@
 ## Week 3 — API, Frontend, Integration Tests
 
 ### 3.1 Create `SovereignID.Auth.Api`
-- [ ] Create folder `src/bc-auth/SovereignID.Auth.Api/`.
-- [ ] `SovereignID.Auth.Api.csproj` targets `net9.0`, `<Sdk>` =
+- [x] Create folder `src/bc-auth/SovereignID.Auth.Api/`.
+- [x] `SovereignID.Auth.Api.csproj` targets `net9.0`, `<Sdk>` =
   `Microsoft.NET.Sdk.Web`, `ImplicitUsings` + `Nullable` enabled.
-- [ ] Project references: `SovereignID.Auth.Application`,
+- [x] Project references: `SovereignID.Auth.Application`,
   `SovereignID.Auth.Infrastructure`. NO reference to any other BC.
-- [ ] Add NuGet: `Microsoft.AspNetCore.Authentication.JwtBearer` (9.0.*).
-- [ ] Add `AuthOptions` record bound to configuration section `"Auth"`
+- [x] Add NuGet: `Microsoft.AspNetCore.Authentication.JwtBearer` (9.0.*).
+- [x] Add `AuthOptions` record bound to configuration section `"Auth"`
   with fields: `JwtSigningKey`, `JwtIssuer`, `JwtAudience`,
   `NonceTtlSeconds` (default 600).
-- [ ] `Program.cs`:
+- [x] `Program.cs`:
   - Register all Auth handlers, ports, and adapters in DI.
   - Register `InMemoryAuthChallengeRepository` as `Singleton`.
   - Register `IClock` + `IGuidGenerator` adapters (system clock / `Guid.NewGuid`).
@@ -193,7 +193,7 @@
     `WebApplicationFactory<Program>` support.
 
 ### 3.2 Endpoints
-- [ ] `AuthEndpoints.MapAuth(WebApplication app)` registers:
+- [x] `AuthEndpoints.MapAuth(WebApplication app)` registers:
   - `app.MapGet("/auth/nonce", ...)` resolving
     `IQueryHandler<GenerateNonceQuery, GenerateNonceResult>`,
     returning `200 NonceResponse`.
@@ -201,76 +201,76 @@
     resolving `ICommandHandler<VerifySiweCommand, VerifySiweResult>`
     and mapping domain errors to HTTP status codes per design §"Public
     HTTP Contract".
-- [ ] Both endpoints accept `CancellationToken` and forward it to handlers.
-- [ ] Error mapping is centralized (single helper `ToProblem(AuthError)`).
-- [ ] XML doc comments on the public `AuthEndpoints.MapAuth` method and
+- [x] Both endpoints accept `CancellationToken` and forward it to handlers.
+- [x] Error mapping is centralized (single helper `ToProblem(AuthError)`).
+- [x] XML doc comments on the public `AuthEndpoints.MapAuth` method and
   on the request/response records.
 
 ### 3.3 Configuration & secrets hygiene
-- [ ] `appsettings.json` contains non-secret defaults only
+- [x] `appsettings.json` contains non-secret defaults only
   (`JwtIssuer`, `JwtAudience`, `NonceTtlSeconds`), and `JwtSigningKey`
   as an empty string.
-- [ ] `appsettings.Development.example.json` shipped in the repo with a
+- [x] `appsettings.Development.example.json` shipped in the repo with a
   placeholder signing key and a note instructing to copy it to
   `appsettings.Development.json` (gitignored) — matches the pattern
   already used by the Phase 1 demo.
-- [ ] `Program.cs` fails fast if `AUTH_JWT_SIGNING_KEY` is missing in
+- [x] `Program.cs` fails fast if `AUTH_JWT_SIGNING_KEY` is missing in
   non-Development environments.
-- [ ] Confirm `.gitignore` excludes `appsettings.Development.json` (it
+- [x] Confirm `.gitignore` excludes `appsettings.Development.json` (it
   already does for the legacy demo; verify for the new project too).
 
 ### 3.4 Frontend (wwwroot)
-- [ ] Create `wwwroot/index.html` with a header, a "Sign in with
+- [x] Create `wwwroot/index.html` with a header, a "Sign in with
   Ethereum" button, a `<pre>` status area, and a `<pre>` "signed
   message" area.
-- [ ] Create `wwwroot/app.js` implementing the six-step flow from
+- [x] Create `wwwroot/app.js` implementing the six-step flow from
   design §D9. No external JS dependencies. Use `window.ethereum` only.
-- [ ] The SIWE message built on the client matches the grammar
+- [x] The SIWE message built on the client matches the grammar
   `ManualSiweMessageParser` expects (include `Issued At` in ISO-8601
   UTC, omit optional fields for simplicity).
-- [ ] Defensive checks: `window.ethereum` missing → show installation
+- [x] Defensive checks: `window.ethereum` missing → show installation
   hint; user rejects signature → render error without a stack trace.
-- [ ] Display the raw SIWE payload before sending (transparency for the
+- [x] Display the raw SIWE payload before sending (transparency for the
   user; reinforces the teaching value).
 
 ### 3.5 Integration tests
-- [ ] Create `tests/bc-auth/SovereignID.Auth.IntegrationTests/` xUnit
+- [x] Create `tests/bc-auth/SovereignID.Auth.IntegrationTests/` xUnit
   project targeting `net9.0`.
-- [ ] NuGet: `Microsoft.AspNetCore.Mvc.Testing` (9.0.*), `xunit`, `xunit.runner.visualstudio`,
+- [x] NuGet: `Microsoft.AspNetCore.Mvc.Testing` (9.0.*), `xunit`, `xunit.runner.visualstudio`,
   `FluentAssertions`.
-- [ ] Project references: `SovereignID.Auth.Api` (under test),
+- [x] Project references: `SovereignID.Auth.Api` (under test),
   `SovereignID.Auth.Domain`, `SovereignID.Auth.Application`,
   `SovereignID.Auth.Infrastructure`, and (test-only) the legacy
   `SovereignID.Crypto` project for keypair generation.
-- [ ] Implement `TestClock : IClock` — mutable `DateTimeOffset` with
+- [x] Implement `TestClock : IClock` — mutable `DateTimeOffset` with
   `Advance(TimeSpan)`.
-- [ ] Implement `DeterministicNonceGenerator : INonceGenerator` for
+- [x] Implement `DeterministicNonceGenerator : INonceGenerator` for
   reproducibility.
-- [ ] Custom `WebApplicationFactory<Program>` overrides `IClock`,
+- [x] Custom `WebApplicationFactory<Program>` overrides `IClock`,
   `INonceGenerator`, and injects a test `AUTH_JWT_SIGNING_KEY` via
   `builder.UseSetting` or environment variable per the test run.
-- [ ] Test 1 — happy path: nonce → sign → verify → 200; JWT `sub` =
+- [x] Test 1 — happy path: nonce → sign → verify → 200; JWT `sub` =
   signer address; response contains the same address.
-- [ ] Test 2 — replay: second `POST /auth/verify` with identical payload
+- [x] Test 2 — replay: second `POST /auth/verify` with identical payload
   → 401 `nonce_consumed`.
-- [ ] Test 3 — expired: advance `TestClock` past TTL → 401 `nonce_expired`.
-- [ ] Test 4 — wrong chain id: build SIWE message with `Chain ID: 1` →
+- [x] Test 3 — expired: advance `TestClock` past TTL → 401 `nonce_expired`.
+- [x] Test 4 — wrong chain id: build SIWE message with `Chain ID: 1` →
   400 `unsupported_chain`.
-- [ ] Test 5 — tampered message: sign one payload, submit a different
+- [x] Test 5 — tampered message: sign one payload, submit a different
   one with the same signature → 401 `signature_mismatch`.
-- [ ] Test 6 — unknown nonce: submit a SIWE message whose nonce was
+- [x] Test 6 — unknown nonce: submit a SIWE message whose nonce was
   never issued → 401 `nonce_unknown`.
-- [ ] Test 7 — malformed payload: missing `Version` line → 400
+- [x] Test 7 — malformed payload: missing `Version` line → 400
   `siwe_parse_failed`, `detail` mentions the failing line.
 
 ### 3.6 Solution + build integration
-- [ ] Add all four new projects to `SovereignID.sln` under matching
+- [x] Add all four new projects to `SovereignID.sln` under matching
   solution folders (`bc-auth`, `tests/bc-auth`).
 - [ ] Run `dotnet build SovereignID.sln`. Zero warnings in Phase 2 code.
-- [ ] Run `dotnet test SovereignID.sln --filter "Category!=Integration"`.
+- [x] Run `dotnet test SovereignID.sln --filter "Category!=Integration"`.
   All unit + integration (WebApplicationFactory) tests pass without
   any network access.
-- [ ] Run `dotnet test SovereignID.sln` (including all architecture
+- [x] Run `dotnet test SovereignID.sln` (including all architecture
   tests). All green. Confirm no new architecture rule violations.
 
 ### 3.7 Manual demo walkthrough (local)
@@ -296,8 +296,8 @@
 
 ### 3.9 Week 3 deliverable
 - [ ] Browser demo renders a JWT after a real MetaMask signature.
-- [ ] All seven integration tests pass in-process.
-- [ ] All architecture tests still pass.
+- [x] All seven integration tests pass in-process.
+- [x] All architecture tests still pass.
 - [ ] Commit checkpoint: "feat(auth): Auth.Api + frontend + integration tests".
 - [ ] Open PR "feat(auth): Phase 2 — SIWE authentication (endpoints,
   JWT, demo page)".
@@ -306,12 +306,12 @@
 
 ## Definition of Done
 
-- [ ] `GET /auth/nonce` returns a fresh nonce with a 10-minute expiry.
-- [ ] `POST /auth/verify` accepts a SIWE payload + signature and returns
+- [x] `GET /auth/nonce` returns a fresh nonce with a 10-minute expiry.
+- [x] `POST /auth/verify` accepts a SIWE payload + signature and returns
   a signed JWT on success, or a typed error code on failure.
-- [ ] Nonce is single-use: the second `POST /auth/verify` with the same
+- [x] Nonce is single-use: the second `POST /auth/verify` with the same
   payload fails with `nonce_consumed`.
-- [ ] Chain ID other than `11155111` is rejected with `unsupported_chain`.
+- [x] Chain ID other than `11155111` is rejected with `unsupported_chain`.
 - [ ] All Auth code follows `AGENTS.md` conventions: async everywhere,
   records for immutable data, interfaces for external dependencies,
   XML doc comments on public APIs, no secrets in source.
@@ -319,8 +319,8 @@
   (enforced by architecture tests).
 - [ ] Manual SIWE parser passes the canonical EIP-4361 example plus the
   negative cases listed in 2.4.
-- [ ] Integration tests run in-process via `WebApplicationFactory<Program>`
+- [x] Integration tests run in-process via `WebApplicationFactory<Program>`
   with zero network calls, zero secrets, and a deterministic clock.
 - [ ] Browser demo (vanilla JS + MetaMask) successfully completes the
   full flow against a locally running API.
-- [ ] `dotnet test SovereignID.sln` is green end-to-end.
+- [x] `dotnet test SovereignID.sln` is green end-to-end.

@@ -22,7 +22,18 @@ public sealed class InMemoryAuthChallengeRepository : IAuthChallengeRepository
 
     public Task DeleteAsync(Nonce nonce, CancellationToken cancellationToken)
     {
-        _ = storage.TryRemove(nonce, out _);
+        if (!storage.TryGetValue(nonce, out var challenge))
+        {
+            return Task.CompletedTask;
+        }
+
+        // Keep consumed challenges until eviction so replay attempts can be
+        // classified as nonce_consumed. Fresh entries are removed.
+        if (!challenge.IsConsumed)
+        {
+            _ = storage.TryRemove(nonce, out _);
+        }
+
         return Task.CompletedTask;
     }
 
