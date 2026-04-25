@@ -32,7 +32,7 @@ Full architecture: [openspec/specs/architecture.md](openspec/specs/architecture.
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Crypto primitives (keys, signing, notarization) | ✅ Demo + tests |
-| 2 | SIWE authentication (login without password) | ⏳ Pending |
+| 2 | SIWE authentication (login without password) | ✅ Demo + tests |
 | 3 | W3C Verifiable Credentials (issue + verify) | ⏳ Pending |
 | 4 | KYC portable use case + revocation | ⏳ Pending |
 | 5 | Deployment + portfolio | ⏳ Pending |
@@ -85,6 +85,18 @@ dotnet test SovereignID.sln
 
 dotnet run --project src/legacy/SovereignID.Demo.Phase1
 ```
+
+### Run Auth demo (Phase 2)
+
+Set a 32-byte signing key and run the Auth API:
+
+```powershell
+$env:AUTH_JWT_SIGNING_KEY="replace-with-a-random-32-byte-secret"
+dotnet run --project src/bc-auth/SovereignID.Auth.Api
+```
+
+Then open [http://localhost:5000/](http://localhost:5000/) (or the URL shown by `dotnet run`) and click **Sign in with Ethereum**.
+MetaMask will sign the SIWE payload and the page will render the issued JWT and signer address.
 
 ### Local configuration (optional)
 

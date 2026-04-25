@@ -4,27 +4,28 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using FluentAssertions;
-using Nethereum.Signer;
+using SovereignID.Crypto;
 
 namespace SovereignID.Auth.IntegrationTests;
 
 public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
 {
-    private readonly HttpClient client;
-    private readonly AuthApiFactory factory;
-    private readonly EthECKey signer = EthECKey.GenerateKey();
+    private readonly HttpClient _client;
+    private readonly AuthApiFactory _factory;
+    private readonly KeyPair _signer = KeyPair.Generate();
+    private readonly MessageSigner _signerUtility = new();
 
     public AuthEndpointsTests(AuthApiFactory factory)
     {
-        this.factory = factory;
-        client = factory.CreateClient();
+        _factory = factory;
+        _client = factory.CreateClient();
     }
 
     [Fact]
     public async Task HappyPath_ReturnsJwtAndAddress()
     {
         var nonce = await GetNonceAsync();
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 11155111, includeVersion: true);
         var signature = Sign(message);
 
@@ -45,7 +46,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task Replay_ReturnsNonceConsumed()
     {
         var nonce = await GetNonceAsync();
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 11155111, includeVersion: true);
         var signature = Sign(message);
 
@@ -61,9 +62,9 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task ExpiredNonce_ReturnsNonceExpired()
     {
         var nonce = await GetNonceAsync();
-        factory.Clock.Advance(TimeSpan.FromMinutes(11));
+        _factory.Clock.Advance(TimeSpan.FromMinutes(11));
 
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 11155111, includeVersion: true);
         var signature = Sign(message);
 
@@ -76,7 +77,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task WrongChainId_ReturnsUnsupportedChain()
     {
         var nonce = await GetNonceAsync();
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 1, includeVersion: true);
         var signature = Sign(message);
 
@@ -89,7 +90,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task TamperedMessage_ReturnsSignatureMismatch()
     {
         var nonce = await GetNonceAsync();
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var original = BuildMessage(address, nonce, chainId: 11155111, includeVersion: true);
         var tampered = original.Replace("Sign in to SovereignID demo", "Sign in to another app", StringComparison.Ordinal);
         var signature = Sign(original);
@@ -103,7 +104,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task UnknownNonce_ReturnsNonceUnknown()
     {
         var unknownNonce = "dddddddddddddddddddddddddddddddd";
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, unknownNonce, chainId: 11155111, includeVersion: true);
         var signature = Sign(message);
 
@@ -116,7 +117,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task MalformedPayload_ReturnsSiweParseFailed()
     {
         var nonce = await GetNonceAsync();
-        var address = signer.GetPublicAddress();
+        var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 11155111, includeVersion: false);
         var signature = Sign(message);
 
@@ -128,19 +129,18 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
 
     private async Task<string> GetNonceAsync()
     {
-        var response = await client.GetAsync("/auth/nonce");
+        var response = await _client.GetAsync("/auth/nonce");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var payload = await ReadJsonAsync(response);
         return payload.GetProperty("nonce").GetString()!;
     }
 
     private Task<HttpResponseMessage> PostVerifyAsync(string message, string signature) =>
-        client.PostAsJsonAsync("/auth/verify", new { message, signature });
+        _client.PostAsJsonAsync("/auth/verify", new { message, signature });
 
     private string Sign(string message)
     {
-        var signerUtility = new EthereumMessageSigner();
-        return signerUtility.EncodeUTF8AndSign(message, signer);
+        return _signerUtility.Sign(message, _signer.PrivateKey);
     }
 
     private static string BuildMessage(string address, string nonce, int chainId, bool includeVersion)

@@ -266,7 +266,7 @@
 ### 3.6 Solution + build integration
 - [x] Add all four new projects to `SovereignID.sln` under matching
   solution folders (`bc-auth`, `tests/bc-auth`).
-- [ ] Run `dotnet build SovereignID.sln`. Zero warnings in Phase 2 code.
+- [x] Run `dotnet build SovereignID.sln`. Zero warnings in Phase 2 code.
 - [x] Run `dotnet test SovereignID.sln --filter "Category!=Integration"`.
   All unit + integration (WebApplicationFactory) tests pass without
   any network access.
@@ -274,28 +274,28 @@
   tests). All green. Confirm no new architecture rule violations.
 
 ### 3.7 Manual demo walkthrough (local)
-- [ ] Set `AUTH_JWT_SIGNING_KEY` to a 32-byte random secret in the
+- [x] Set `AUTH_JWT_SIGNING_KEY` to a 32-byte random secret in the
   local shell.
-- [ ] `dotnet run --project src/bc-auth/SovereignID.Auth.Api`.
-- [ ] Open `http://localhost:<port>/` in a browser with MetaMask (any
+- [x] `dotnet run --project src/bc-auth/SovereignID.Auth.Api`.
+- [x] Open `http://localhost:<port>/` in a browser with MetaMask (any
   testnet or even mainnet account works — no gas is spent).
-- [ ] Click "Sign in with Ethereum" → MetaMask opens → confirm → page
+- [x] Click "Sign in with Ethereum" → MetaMask opens → confirm → page
   shows JWT, recovered address, and expiry.
-- [ ] Decode the JWT at [jwt.io](https://jwt.io) and confirm the
+- [x] Decode the JWT at [jwt.io](https://jwt.io) and confirm the
   claims match the signer's address.
 
 ### 3.8 Documentation touch-up
-- [ ] Update `README.md`:
+- [x] Update `README.md`:
   - Add "Phase 2" entry to the status table (Done/Demo).
   - Add a "Run the Auth demo" section pointing to the API project and
     the `AUTH_JWT_SIGNING_KEY` env var.
-- [ ] Do NOT modify `AGENTS.md` (conventions unchanged).
+- [x] Do NOT modify `AGENTS.md` (conventions unchanged).
 - [ ] Update `AGENTS.md` Active Phase pointer ONLY after tasks are
   archived (per experimental workflow rules); out of scope for this
   implementation change.
 
 ### 3.9 Week 3 deliverable
-- [ ] Browser demo renders a JWT after a real MetaMask signature.
+- [x] Browser demo renders a JWT after a real MetaMask signature.
 - [x] All seven integration tests pass in-process.
 - [x] All architecture tests still pass.
 - [ ] Commit checkpoint: "feat(auth): Auth.Api + frontend + integration tests".
@@ -312,15 +312,15 @@
 - [x] Nonce is single-use: the second `POST /auth/verify` with the same
   payload fails with `nonce_consumed`.
 - [x] Chain ID other than `11155111` is rejected with `unsupported_chain`.
-- [ ] All Auth code follows `AGENTS.md` conventions: async everywhere,
+- [x] All Auth code follows `AGENTS.md` conventions: async everywhere,
   records for immutable data, interfaces for external dependencies,
   XML doc comments on public APIs, no secrets in source.
-- [ ] No Nethereum reference in `Auth.Domain` or `Auth.Application`
+- [x] No Nethereum reference in `Auth.Domain` or `Auth.Application`
   (enforced by architecture tests).
-- [ ] Manual SIWE parser passes the canonical EIP-4361 example plus the
+- [x] Manual SIWE parser passes the canonical EIP-4361 example plus the
   negative cases listed in 2.4.
 - [x] Integration tests run in-process via `WebApplicationFactory<Program>`
   with zero network calls, zero secrets, and a deterministic clock.
-- [ ] Browser demo (vanilla JS + MetaMask) successfully completes the
+- [x] Browser demo (vanilla JS + MetaMask) successfully completes the
   full flow against a locally running API.
 - [x] `dotnet test SovereignID.sln` is green end-to-end.
