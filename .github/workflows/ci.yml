@@ -7,14 +7,23 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  dotnet:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node  # o el lenguaje que uses
-        uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
-      - run: npm run lint
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore "SovereignID.sln"
+
+      - name: Build
+        run: dotnet build "SovereignID.sln" -c Release --no-restore
+
+      - name: Test (exclude integration)
+        run: dotnet test "SovereignID.sln" -c Release --no-build --filter "Category!=Integration"
