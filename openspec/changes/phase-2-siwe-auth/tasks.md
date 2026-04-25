@@ -164,7 +164,7 @@
 - [x] `dotnet test` is green across `Auth.*.Tests` projects.
 - [x] Architecture tests confirm Nethereum is only referenced by
   `Auth.Infrastructure` (and legacy).
-- [ ] Commit checkpoint: "feat(auth): infrastructure adapters + JWT issuer".
+- [x] Commit checkpoint: "feat(auth): infrastructure adapters + JWT issuer".
 
 ---
 
@@ -298,7 +298,7 @@
 - [x] Browser demo renders a JWT after a real MetaMask signature.
 - [x] All seven integration tests pass in-process.
 - [x] All architecture tests still pass.
-- [ ] Commit checkpoint: "feat(auth): Auth.Api + frontend + integration tests".
+- [x] Commit checkpoint: "feat(auth): Auth.Api + frontend + integration tests".
 - [ ] Open PR "feat(auth): Phase 2 — SIWE authentication (endpoints,
   JWT, demo page)".
 
