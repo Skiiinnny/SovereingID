@@ -39,11 +39,26 @@ jobs:
         run: |
           New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+      # Interpolar ${{ secrets.SONAR_TOKEN }} en /d:sonar.token=... con cadena vacía
+      # provoca: "The format of the analysis property sonar.token= is invalid".
+      # Usa la variable de entorno y asegura el secreto SONAR_TOKEN en el repo.
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Skiiinnny_SovereingID" /o:"skiiinnny" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          $scanner = "${{ runner.temp }}\scanner\dotnet-sonarscanner"
+          if ([string]::IsNullOrWhiteSpace($env:SONAR_TOKEN)) {
+            Write-Host "SONAR_TOKEN is empty: add repository secret SONAR_TOKEN (SonarQube / SonarCloud user token) for analysis."
+            Write-Host "Falling back to build only."
+            dotnet build "SovereignID.sln" -c Release
+            exit 0
+          }
+          & $scanner begin `
+            /k:"Skiiinnny_SovereingID" `
+            /o:"skiiinnny" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.token="$($env:SONAR_TOKEN)"
+          dotnet build "SovereignID.sln" -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $scanner end /d:sonar.token="$($env:SONAR_TOKEN)"
