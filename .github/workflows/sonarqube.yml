@@ -60,10 +60,8 @@ jobs:
         run: |
           $scanner = "${{ runner.temp }}\scanner\dotnet-sonarscanner"
           if ([string]::IsNullOrWhiteSpace($env:SONAR_TOKEN)) {
-            Write-Host "SONAR_TOKEN is empty: add repository secret SONAR_TOKEN (SonarQube / SonarCloud user token) for analysis."
-            Write-Host "Falling back to build only."
-            dotnet build "SovereignID.sln" -c Release
-            exit 0
+            Write-Error "SONAR_TOKEN is empty. Configure repository secret SONAR_TOKEN (SonarQube/SonarCloud user token)."
+            exit 1
           }
           & $scanner begin `
             /k:"Skiiinnny_SovereingID" `
