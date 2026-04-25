@@ -25,7 +25,7 @@
 - [x] 3.2 Re-add the legacy projects from their new paths under solution folder `legacy` (`dotnet sln SovereignID.sln add --solution-folder legacy ...`).
 - [x] 3.3 Re-add the legacy test projects under solution folder `tests/legacy` similarly.
 - [x] 3.4 Run `dotnet build SovereignID.sln` and `dotnet test SovereignID.sln`. All Phase 1 tests MUST still pass.
-- [ ] 3.5 Commit checkpoint: "chore(legacy): move Phase 1 projects under src/legacy and tests/legacy".
+- [x] 3.5 Commit checkpoint: "chore(legacy): move Phase 1 projects under src/legacy and tests/legacy".
 
 ## 4. Create SharedKernel.Domain
 
@@ -78,7 +78,7 @@
 
 - [x] 10.1 Run `dotnet build SovereignID.sln`. Every project (legacy + shared + 3 BCs) MUST compile.
 - [x] 10.2 Run `dotnet test SovereignID.sln`. All pre-existing Phase 1 tests MUST still pass; no new tests yet.
-- [ ] 10.3 Commit checkpoint: "feat(arch): add SharedKernel and per-BC layered scaffolding".
+- [x] 10.3 Commit checkpoint: "feat(arch): add SharedKernel and per-BC layered scaffolding".
 
 ## 11. Architecture tests project
 
@@ -114,8 +114,8 @@
 
 - [x] 14.1 `dotnet build SovereignID.sln` succeeds with zero warnings for new projects (legacy warnings, if any, are out of scope).
 - [x] 14.2 `dotnet test SovereignID.sln` succeeds; counts include all Phase 1 tests + every architecture test.
-- [ ] 14.3 `git diff --stat main...HEAD` shows: project moves under `src/legacy/` and `tests/legacy/`, new `src/shared/`, new `src/bc-*/`, new `tests/architecture/`, regenerated `SovereignID.sln`, README touch-up. NO modification inside any moved Phase 1 source file.
-- [ ] 14.4 Open PR titled "feat(arch): add Onion architecture foundation and isolate Phase 1 as legacy".
+- [x] 14.3 `git diff --stat main...HEAD` shows: project moves under `src/legacy/` and `tests/legacy/`, new `src/shared/`, new `src/bc-*/`, new `tests/architecture/`, regenerated `SovereignID.sln`, README touch-up. NO modification inside any moved Phase 1 source file.
+- [x] 14.4 Open PR titled "feat(arch): add Onion architecture foundation and isolate Phase 1 as legacy".
 
 ## Definition of Done
 
