@@ -11,8 +11,13 @@ function Resolve-CoberturaFiles {
     param([string]$PathPattern)
 
     if ($PathPattern -match '[\*\?]') {
-        $matches = @(Get-ChildItem -Path . -Recurse -File -Filter (Split-Path -Path $PathPattern -Leaf) -ErrorAction SilentlyContinue |
-            Where-Object { $_.FullName -like ("*" + ($PathPattern -replace '/', '\')) })
+        $normalizedPattern = ($PathPattern -replace '\\', '/').TrimStart('./')
+        $leafName = Split-Path -Path $normalizedPattern -Leaf
+        $matches = @(Get-ChildItem -Path . -Recurse -File -Filter $leafName -ErrorAction SilentlyContinue |
+            Where-Object {
+                $fullName = ($_.FullName -replace '\\', '/')
+                $fullName -like ("*/" + $normalizedPattern) -or $fullName -like ("*" + $normalizedPattern)
+            })
         
         if ($matches.Count -eq 0) {
             throw "Cobertura report not found at '$PathPattern'."
