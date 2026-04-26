@@ -26,6 +26,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+      - name: Ensure Sonar cache directories
+        shell: powershell
+        run: |
+          New-Item -Path "$HOME\sonar\cache" -ItemType Directory -Force | Out-Null
+          New-Item -Path "${{ runner.temp }}\scanner" -ItemType Directory -Force | Out-Null
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
