@@ -1,3 +1,4 @@
+using System.Globalization;
 using SovereignID.Auth.Domain;
 using SovereignID.Auth.Domain.Ports;
 using SovereignID.SharedKernel.Domain;
@@ -30,49 +31,41 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
             Ensure(versionText == "1", "Line 7 must be 'Version: 1'.");
             var chainId = int.Parse(ParsePrefixed(lines[7], "Chain ID: ", "Line 8"));
             var nonce = Nonce.Create(ParsePrefixed(lines[8], "Nonce: ", "Line 9"));
-            var issuedAt = DateTimeOffset.Parse(ParsePrefixed(lines[9], "Issued At: ", "Line 10"));
+            var issuedAt = DateTimeOffset.Parse(
+                ParsePrefixed(lines[9], "Issued At: ", "Line 10"),
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind);
 
             DateTimeOffset? expirationTime = null;
             DateTimeOffset? notBefore = null;
             string? requestId = null;
             var resources = new List<Uri>();
 
+            var skipUntilIndex = -1;
             for (var i = 10; i < lines.Length; i++)
             {
+                if (i <= skipUntilIndex)
+                {
+                    continue;
+                }
+
                 var line = lines[i];
                 if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
                 }
 
-                if (line.StartsWith("Expiration Time: ", StringComparison.Ordinal))
+                if (TryParseOptionalLine(
+                        line,
+                        lines,
+                        i,
+                        out var nextIndex,
+                        ref expirationTime,
+                        ref notBefore,
+                        ref requestId,
+                        resources))
                 {
-                    expirationTime = DateTimeOffset.Parse(ParsePrefixed(line, "Expiration Time: ", $"Line {i + 1}"));
-                    continue;
-                }
-
-                if (line.StartsWith("Not Before: ", StringComparison.Ordinal))
-                {
-                    notBefore = DateTimeOffset.Parse(ParsePrefixed(line, "Not Before: ", $"Line {i + 1}"));
-                    continue;
-                }
-
-                if (line.StartsWith("Request ID: ", StringComparison.Ordinal))
-                {
-                    requestId = ParsePrefixed(line, "Request ID: ", $"Line {i + 1}");
-                    continue;
-                }
-
-                if (line == "Resources:")
-                {
-                    i++;
-                    while (i < lines.Length && lines[i].StartsWith("- ", StringComparison.Ordinal))
-                    {
-                        resources.Add(new Uri(lines[i][2..], UriKind.Absolute));
-                        i++;
-                    }
-
-                    i--;
+                    skipUntilIndex = nextIndex;
                     continue;
                 }
 
@@ -98,6 +91,59 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
         {
             throw new AuthDomainException(AuthErrors.SiweParseFailed(ex.Message));
         }
+    }
+
+    private static bool TryParseOptionalLine(
+        string line,
+        string[] lines,
+        int index,
+        out int nextIndex,
+        ref DateTimeOffset? expirationTime,
+        ref DateTimeOffset? notBefore,
+        ref string? requestId,
+        List<Uri> resources)
+    {
+        nextIndex = index;
+        var location = $"Line {index + 1}";
+
+        if (line.StartsWith("Expiration Time: ", StringComparison.Ordinal))
+        {
+            expirationTime = DateTimeOffset.Parse(
+                ParsePrefixed(line, "Expiration Time: ", location),
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind);
+            return true;
+        }
+
+        if (line.StartsWith("Not Before: ", StringComparison.Ordinal))
+        {
+            notBefore = DateTimeOffset.Parse(
+                ParsePrefixed(line, "Not Before: ", location),
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind);
+            return true;
+        }
+
+        if (line.StartsWith("Request ID: ", StringComparison.Ordinal))
+        {
+            requestId = ParsePrefixed(line, "Request ID: ", location);
+            return true;
+        }
+
+        if (line != "Resources:")
+        {
+            return false;
+        }
+
+        var resourceIndex = index + 1;
+        while (resourceIndex < lines.Length && lines[resourceIndex].StartsWith("- ", StringComparison.Ordinal))
+        {
+            resources.Add(new Uri(lines[resourceIndex][2..], UriKind.Absolute));
+            resourceIndex++;
+        }
+
+        nextIndex = resourceIndex - 1;
+        return true;
     }
 
     private static string ParsePrefixed(string line, string prefix, string location)

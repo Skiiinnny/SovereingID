@@ -24,7 +24,7 @@ ${address}
 
 Sign in to SovereignID demo
 
-URI: ${window.location.origin}
+URI: ${globalThis.location.origin}
 Version: 1
 Chain ID: 11155111
 Nonce: ${nonce}
@@ -32,7 +32,7 @@ Issued At: ${issuedAt}`;
   }
 
   async function signIn() {
-    if (!window.ethereum) {
+    if (!globalThis.ethereum) {
       setStatus("No se detecto MetaMask. Instala la extension para continuar.");
       return;
     }
@@ -48,17 +48,17 @@ Issued At: ${issuedAt}`;
       const nonce = nonceBody.nonce || randomNonce32();
 
       setStatus("Solicitando cuenta de MetaMask...");
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await globalThis.ethereum.request({ method: "eth_requestAccounts" });
       const account = accounts && accounts.length > 0 ? accounts[0] : null;
       if (!account) {
         throw new Error("No se recibio una cuenta desde MetaMask.");
       }
 
-      const message = buildSiweMessage(window.location.host, account, nonce);
+      const message = buildSiweMessage(globalThis.location.host, account, nonce);
       messageBox.textContent = message;
 
       setStatus("Solicitando firma de SIWE...");
-      const signature = await window.ethereum.request({
+      const signature = await globalThis.ethereum.request({
         method: "personal_sign",
         params: [message, account]
       });

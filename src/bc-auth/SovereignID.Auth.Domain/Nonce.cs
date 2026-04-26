@@ -2,9 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace SovereignID.Auth.Domain;
 
-public sealed record Nonce
+public sealed partial record Nonce
 {
-    private static readonly Regex Hex32Regex = new("^[0-9a-f]{32}$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    [GeneratedRegex("^[0-9a-f]{32}$", RegexOptions.CultureInvariant)]
+    private static partial Regex Hex32Regex();
 
     private Nonce(string value) => Value = value;
 
@@ -12,7 +13,7 @@ public sealed record Nonce
 
     public static Nonce Create(string value)
     {
-        if (!Hex32Regex.IsMatch(value))
+        if (!Hex32Regex().IsMatch(value))
         {
             throw new ArgumentException("Nonce must be exactly 32 lowercase hex characters.", nameof(value));
         }
