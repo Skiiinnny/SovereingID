@@ -103,7 +103,8 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     [Fact]
     public async Task UnknownNonce_ReturnsNonceUnknown()
     {
-        var unknownNonce = "dddddddddddddddddddddddddddddddd";
+        var issuedNonce = await GetNonceAsync();
+        var unknownNonce = BuildUnknownNonce(issuedNonce);
         var address = _signer.Address;
         var message = BuildMessage(address, unknownNonce, chainId: 11155111, includeVersion: true);
         var signature = Sign(message);
@@ -141,6 +142,14 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     private string Sign(string message)
     {
         return _signerUtility.Sign(message, _signer.PrivateKey);
+    }
+
+    private static string BuildUnknownNonce(string issuedNonce)
+    {
+        issuedNonce.Should().MatchRegex("^[0-9a-f]{32}$");
+
+        var replacement = issuedNonce[0] == 'a' ? 'b' : 'a';
+        return replacement + issuedNonce[1..];
     }
 
     private static string BuildMessage(string address, string nonce, int chainId, bool includeVersion)

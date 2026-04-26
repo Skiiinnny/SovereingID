@@ -56,13 +56,6 @@ public sealed class VerifySiweCommandHandler : ICommandHandler<VerifySiweCommand
             return Result<VerifySiweResult, AuthError>.Failure(ex.Error);
         }
 
-        var now = await clock.GetUtcNowAsync(cancellationToken);
-        var consumeResult = challenge.Consume(now);
-        if (consumeResult.IsFailure)
-        {
-            return Result<VerifySiweResult, AuthError>.Failure(consumeResult.Error!);
-        }
-
         var recoveredAddress = await signatureVerifier.RecoverAddressAsync(
             siweMessage.OriginalPayload,
             Signature.Create(input.Signature),
@@ -72,6 +65,13 @@ public sealed class VerifySiweCommandHandler : ICommandHandler<VerifySiweCommand
         {
             return Result<VerifySiweResult, AuthError>.Failure(
                 AuthErrors.SignatureMismatch(siweMessage.Address.Value, recoveredAddress.Value));
+        }
+
+        var now = await clock.GetUtcNowAsync(cancellationToken);
+        var consumeResult = challenge.Consume(now);
+        if (consumeResult.IsFailure)
+        {
+            return Result<VerifySiweResult, AuthError>.Failure(consumeResult.Error!);
         }
 
         await repository.DeleteAsync(siweMessage.Nonce, cancellationToken);

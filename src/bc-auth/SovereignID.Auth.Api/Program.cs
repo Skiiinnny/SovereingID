@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SovereignID.Auth.Api.Configuration;
 using SovereignID.Auth.Api.Endpoints;
@@ -49,7 +50,16 @@ builder.Services.AddScoped<ISiweMessageParser, ManualSiweMessageParser>();
 builder.Services.AddScoped<ISiweSignatureVerifier, NethereumSiweSignatureVerifier>();
 builder.Services.AddScoped<IJwtTokenIssuer, JwtBearerTokenIssuer>();
 
-builder.Services.AddScoped<IQueryHandler<GenerateNonceQuery, GenerateNonceResult>, GenerateNonceQueryHandler>();
+builder.Services.AddScoped<IQueryHandler<GenerateNonceQuery, GenerateNonceResult>>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<AuthOptions>>().Value;
+    var nonceTtl = TimeSpan.FromSeconds(options.NonceTtlSeconds);
+    return new GenerateNonceQueryHandler(
+        sp.GetRequiredService<INonceGenerator>(),
+        sp.GetRequiredService<IClock>(),
+        sp.GetRequiredService<IAuthChallengeRepository>(),
+        nonceTtl);
+});
 builder.Services.AddScoped<ICommandHandler<VerifySiweCommand, Result<VerifySiweResult, AuthError>>, VerifySiweCommandHandler>();
 
 var authSection = builder.Configuration.GetSection("Auth");

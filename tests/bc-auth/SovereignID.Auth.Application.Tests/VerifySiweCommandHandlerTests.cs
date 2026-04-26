@@ -68,6 +68,20 @@ public class VerifySiweCommandHandlerTests
     }
 
     [Fact]
+    public async Task HandleAsync_RecoveredAddressDiffers_DoesNotConsumeNonce()
+    {
+        var fixture = await TestFixture.HappyPathAsync();
+        fixture.SignatureVerifier.Recovered = EthereumAddress.Create("0x0000000000000000000000000000000000000001");
+
+        var result = await fixture.Handler.HandleAsync(fixture.Command, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("signature_mismatch", result.Error?.Code);
+        Assert.False(fixture.StoredChallenge.IsConsumed);
+        Assert.Equal(0, fixture.Repository.DeleteCalls);
+    }
+
+    [Fact]
     public async Task HandleAsync_OnSuccess_DeletesNonceExactlyOnce()
     {
         var fixture = await TestFixture.HappyPathAsync();

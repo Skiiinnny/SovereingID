@@ -15,7 +15,7 @@ public class GenerateNonceQueryHandlerTests
         var nonceGenerator = new FakeNonceGenerator(nonce);
         var clock = new FakeClock(new DateTimeOffset(2026, 4, 25, 10, 0, 0, TimeSpan.Zero));
         var repository = new SpyRepository();
-        var handler = new GenerateNonceQueryHandler(nonceGenerator, clock, repository);
+        var handler = new GenerateNonceQueryHandler(nonceGenerator, clock, repository, TimeSpan.FromMinutes(10));
 
         var result = await handler.HandleAsync(new GenerateNonceQuery(), CancellationToken.None);
 
@@ -24,17 +24,18 @@ public class GenerateNonceQueryHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ExpiresAt_IsClockPlusTenMinutes()
+    public async Task HandleAsync_ExpiresAt_UsesConfiguredTtl()
     {
         var now = new DateTimeOffset(2026, 4, 25, 10, 0, 0, TimeSpan.Zero);
+        var ttl = TimeSpan.FromSeconds(45);
         var nonceGenerator = new FakeNonceGenerator(DomainNonce.Create("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
         var clock = new FakeClock(now);
         var repository = new SpyRepository();
-        var handler = new GenerateNonceQueryHandler(nonceGenerator, clock, repository);
+        var handler = new GenerateNonceQueryHandler(nonceGenerator, clock, repository, ttl);
 
         var result = await handler.HandleAsync(new GenerateNonceQuery(), CancellationToken.None);
 
-        Assert.Equal(now.AddMinutes(10), result.ExpiresAt);
+        Assert.Equal(now.Add(ttl), result.ExpiresAt);
     }
 
     private sealed class SpyRepository : IAuthChallengeRepository
