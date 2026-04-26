@@ -87,4 +87,4 @@ jobs:
             /d:sonar.coverage.exclusions="src/legacy/**,**/*Marker.cs,**/Program.cs"
           dotnet build "SovereignID.sln" -c Release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          & $scanner end /d:sonar.token="$($env:SONAR_TOKEN)" /d:sonar.qualitygate.wait=true
+          & $scanner end /d:sonar.token="$($env:SONAR_TOKEN)"
