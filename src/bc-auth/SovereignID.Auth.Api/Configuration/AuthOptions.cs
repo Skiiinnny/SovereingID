@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace SovereignID.Auth.Api.Configuration;
 
+[ExcludeFromCodeCoverage]
 public sealed record AuthOptions
 {
     public string JwtSigningKey { get; init; } = string.Empty;

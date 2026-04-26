@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace SovereignID.Auth.Api.Contracts;
 
 /// <summary>
@@ -5,4 +7,5 @@ namespace SovereignID.Auth.Api.Contracts;
 /// </summary>
 /// <param name="Message">Raw SIWE message payload.</param>
 /// <param name="Signature">Wallet signature for the SIWE message.</param>
+[ExcludeFromCodeCoverage]
 public sealed record VerifyRequest(string Message, string Signature);

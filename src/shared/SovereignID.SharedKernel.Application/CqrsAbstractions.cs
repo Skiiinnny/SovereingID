@@ -1,5 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 
+[assembly: ExcludeFromCodeCoverage]
+
 namespace SovereignID.SharedKernel.Application;
 
 /// <summary>

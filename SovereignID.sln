@@ -73,6 +73,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.Api", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.Auth.IntegrationTests", "tests\bc-auth\SovereignID.Auth.IntegrationTests\SovereignID.Auth.IntegrationTests.csproj", "{B33442F3-4E31-495A-8236-B3FFE86C8BAF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{D0D6B8B0-AC35-B3FA-0B96-A9B0E4A3253E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SovereignID.SharedKernel.Domain.Tests", "tests\shared\SovereignID.SharedKernel.Domain.Tests\SovereignID.SharedKernel.Domain.Tests.csproj", "{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -359,6 +363,18 @@ Global
 		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x64.Build.0 = Release|Any CPU
 		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x86.ActiveCfg = Release|Any CPU
 		{B33442F3-4E31-495A-8236-B3FFE86C8BAF}.Release|x86.Build.0 = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|x64.Build.0 = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Debug|x86.Build.0 = Debug|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|x64.ActiveCfg = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|x64.Build.0 = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|x86.ActiveCfg = Release|Any CPU
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -392,5 +408,7 @@ Global
 		{A7FF12E6-11BF-4863-A38A-9875A668F41D} = {7D8832CF-06AF-CF9F-159A-6989E24D2996}
 		{3F3D9BF0-F713-4FF2-BF2A-3D4D174276F9} = {51B5EDA5-A39B-A1B2-45D2-ED995464DF85}
 		{B33442F3-4E31-495A-8236-B3FFE86C8BAF} = {7D8832CF-06AF-CF9F-159A-6989E24D2996}
+		{D0D6B8B0-AC35-B3FA-0B96-A9B0E4A3253E} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{758DF209-B94A-44CC-AB46-17ABCDF1E4BE} = {D0D6B8B0-AC35-B3FA-0B96-A9B0E4A3253E}
 	EndGlobalSection
 EndGlobal

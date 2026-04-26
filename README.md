@@ -131,6 +131,41 @@ dotnet test SovereignID.sln --filter "Category=Integration"
 
 Tests are skipped automatically when required variables are missing, so CI stays green without secrets.
 
+### Run tests with coverage
+
+```bash
+dotnet test SovereignID.sln --filter "Category!=Integration" --settings coverlet.runsettings --results-directory coverage
+```
+
+Coverage reports are generated per test project under `coverage/**` in both formats:
+
+- `coverage.opencover.xml` (used by SonarQube)
+- `coverage.cobertura.xml` (used by CI artifact and per-BC validation)
+
+The shared `coverlet.runsettings` enforces a local 70% threshold (`line`, `branch`, `method`) so the command fails early when coverage drops below the floor.
+
+### Integration test convention
+
+`[Trait("Category","Integration")]` is reserved only for tests that require real external I/O (for example live Sepolia RPC, deployed contracts, external DB, or filesystem outside test output directories).
+
+`SovereignID.Auth.IntegrationTests` currently hosts in-process `WebApplicationFactory<Program>` tests that do not hit external I/O; those tests intentionally do not carry the `Integration` trait and run in default CI coverage.
+
+### CI / SonarQube pipeline
+
+Build and test now run in `.github/workflows/ci.yml` (`ubuntu-latest`) and produce the `coverage/` artifact after:
+
+- restore
+- build
+- test with coverage (`Category!=Integration`)
+- per-BC coverage check via `ci/Check-BcCoverage.ps1`
+
+Sonar analysis runs in `.github/workflows/sonarqube.yml` (`windows-latest`), downloads the same coverage artifact, and passes:
+
+- `sonar.cs.opencover.reportsPaths`
+- `sonar.exclusions`
+- `sonar.coverage.exclusions`
+- `sonar.qualitygate.wait=true`
+
 ### SonarCloud in CI
 
 The repository includes a dedicated workflow at `.github/workflows/sonarqube.yml`.
@@ -142,7 +177,7 @@ The repository includes a dedicated workflow at `.github/workflows/sonarqube.yml
 PR verification checklist:
 
 1. Open or update a PR targeting `main`.
-2. Confirm both workflows complete successfully: `dotnet` and `SonarQube`.
+2. Confirm both workflows complete successfully: `CI` and `SonarQube`.
 3. Confirm SonarCloud reports the analysis for the PR branch with no token/auth errors.
 
 ### Deploying `Notary.sol`

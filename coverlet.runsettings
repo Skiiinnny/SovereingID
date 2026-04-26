@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>opencover,cobertura</Format>
+          <DeterministicReport>false</DeterministicReport>
+          <SingleHit>false</SingleHit>
+          <Threshold>70</Threshold>
+          <ThresholdType>line,branch,method</ThresholdType>
+          <ThresholdStat>total</ThresholdStat>
+          <ExcludeByAttribute>ExcludeFromCodeCoverageAttribute,GeneratedCodeAttribute,CompilerGeneratedAttribute,Obsolete</ExcludeByAttribute>
+          <ExcludeByFile>**/Program.cs,**/*.g.cs,**/obj/**,**/bin/**</ExcludeByFile>
+          <Exclude>[*SovereignID.Crypto*]*,[*SovereignID.Chain*]*,[*SovereignID.Demo.Phase1*]*,[*]*Marker</Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

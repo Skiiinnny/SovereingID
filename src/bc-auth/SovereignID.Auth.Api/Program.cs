@@ -1,4 +1,5 @@
 using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -97,6 +98,7 @@ AuthEndpoints.MapAuth(app);
 
 await app.RunAsync();
 
+[ExcludeFromCodeCoverage]
 public partial class Program
 {
     protected Program()
