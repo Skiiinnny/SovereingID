@@ -36,10 +36,7 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind);
 
-            DateTimeOffset? expirationTime = null;
-            DateTimeOffset? notBefore = null;
-            string? requestId = null;
-            var resources = new List<Uri>();
+            var optionalFields = new OptionalFieldsState();
 
             var skipUntilIndex = -1;
             for (var i = 10; i < lines.Length; i++)
@@ -60,10 +57,7 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
                         lines,
                         i,
                         out var nextIndex,
-                        ref expirationTime,
-                        ref notBefore,
-                        ref requestId,
-                        resources))
+                        optionalFields))
                 {
                     skipUntilIndex = nextIndex;
                     continue;
@@ -81,10 +75,10 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
                 ChainId: chainId,
                 Nonce: nonce,
                 IssuedAt: issuedAt,
-                ExpirationTime: expirationTime,
-                NotBefore: notBefore,
-                RequestId: requestId,
-                Resources: resources,
+                ExpirationTime: optionalFields.ExpirationTime,
+                NotBefore: optionalFields.NotBefore,
+                RequestId: optionalFields.RequestId,
+                Resources: optionalFields.Resources,
                 OriginalPayload: payload));
         }
         catch (Exception ex) when (ex is not AuthDomainException)
@@ -98,17 +92,14 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
         string[] lines,
         int index,
         out int nextIndex,
-        ref DateTimeOffset? expirationTime,
-        ref DateTimeOffset? notBefore,
-        ref string? requestId,
-        List<Uri> resources)
+        OptionalFieldsState optionalFields)
     {
         nextIndex = index;
         var location = $"Line {index + 1}";
 
         if (line.StartsWith("Expiration Time: ", StringComparison.Ordinal))
         {
-            expirationTime = DateTimeOffset.Parse(
+            optionalFields.ExpirationTime = DateTimeOffset.Parse(
                 ParsePrefixed(line, "Expiration Time: ", location),
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind);
@@ -117,7 +108,7 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
 
         if (line.StartsWith("Not Before: ", StringComparison.Ordinal))
         {
-            notBefore = DateTimeOffset.Parse(
+            optionalFields.NotBefore = DateTimeOffset.Parse(
                 ParsePrefixed(line, "Not Before: ", location),
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.RoundtripKind);
@@ -126,7 +117,7 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
 
         if (line.StartsWith("Request ID: ", StringComparison.Ordinal))
         {
-            requestId = ParsePrefixed(line, "Request ID: ", location);
+            optionalFields.RequestId = ParsePrefixed(line, "Request ID: ", location);
             return true;
         }
 
@@ -138,12 +129,23 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
         var resourceIndex = index + 1;
         while (resourceIndex < lines.Length && lines[resourceIndex].StartsWith("- ", StringComparison.Ordinal))
         {
-            resources.Add(new Uri(lines[resourceIndex][2..], UriKind.Absolute));
+            optionalFields.Resources.Add(new Uri(lines[resourceIndex][2..], UriKind.Absolute));
             resourceIndex++;
         }
 
         nextIndex = resourceIndex - 1;
         return true;
+    }
+
+    private sealed class OptionalFieldsState
+    {
+        public DateTimeOffset? ExpirationTime { get; set; }
+
+        public DateTimeOffset? NotBefore { get; set; }
+
+        public string? RequestId { get; set; }
+
+        public List<Uri> Resources { get; } = [];
     }
 
     private static string ParsePrefixed(string line, string prefix, string location)
