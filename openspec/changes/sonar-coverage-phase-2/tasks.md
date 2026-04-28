@@ -21,7 +21,7 @@
 
 - [x] 2.1 Crear `coverlet.runsettings` en la raíz del repo con:
   - `Format=opencover,cobertura`
-  - `DeterministicReport=true`
+  - `DeterministicReport=false` (OpenCover + `true` is unsupported by Coverlet)
   - `SingleHit=false`
   - `Threshold=70`, `ThresholdType=line,branch,method`, `ThresholdStat=total`
   - `ExcludeByAttribute`: `ExcludeFromCodeCoverageAttribute`,

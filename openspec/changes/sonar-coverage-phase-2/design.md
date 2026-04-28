@@ -156,7 +156,7 @@ futuros.
 **Decisión:**
 
 1. Crear `coverlet.runsettings` en la raíz del repo con
-   `Format=opencover,cobertura`, `DeterministicReport=true`,
+   `Format=opencover,cobertura`, `DeterministicReport=false`,
    `SingleHit=false`, `Threshold=70`, `ThresholdType=line,branch,method`,
    `ThresholdStat=total`, y las listas de `Exclude`, `ExcludeByFile`,
    `ExcludeByAttribute` detalladas en §5.
@@ -171,6 +171,10 @@ test en `tests/bc-issuer/` o `tests/bc-verifier/` hereda el setup sin
 copy-paste. El `Threshold=70` actúa como *guardrail local*: si un
 desarrollador corre `dotnet test --settings coverlet.runsettings` y un
 proyecto baja de 70 %, falla localmente antes de llegar a CI.
+`DeterministicReport=false` evita `NotSupportedException` en el reporter
+OpenCover de Coverlet; si en el futuro se exige determinismo en rutas,
+habría que migrar la ingesta de cobertura en Sonar a Cobertura u otro
+formato compatible.
 
 **Alternativas descartadas:**
 

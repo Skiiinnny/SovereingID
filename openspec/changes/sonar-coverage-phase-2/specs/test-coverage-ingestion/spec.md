@@ -11,7 +11,13 @@ the repository root, and every test project SHALL pick up
 `PackageReference` to `coverlet.collector` is required.
 
 The runsettings file SHALL set `Format` to `opencover,cobertura`,
-`DeterministicReport` to `true`, and `SingleHit` to `false`.
+`DeterministicReport` to `false`, and `SingleHit` to `false`.
+
+`DeterministicReport` MUST stay `false` whenever `Format` includes
+`opencover`: Coverlet's OpenCover reporter throws
+`NotSupportedException` for deterministic coverage results. Cobertura
+still emits normally; Sonar continues to consume
+`coverage.opencover.xml` via `sonar.cs.opencover.reportsPaths`.
 
 #### Scenario: A single `dotnet test` command produces both formats for every test project
 

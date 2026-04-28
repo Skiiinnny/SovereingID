@@ -5,7 +5,7 @@
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
           <Format>opencover,cobertura</Format>
-          <DeterministicReport>true</DeterministicReport>
+          <DeterministicReport>false</DeterministicReport>
           <SingleHit>false</SingleHit>
           <Threshold>70</Threshold>
           <ThresholdType>line,branch,method</ThresholdType>

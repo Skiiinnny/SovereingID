@@ -42,6 +42,8 @@ public sealed class JwtBearerTokenIssuer : IJwtTokenIssuer
             Subject = new ClaimsIdentity(claims),
             Issuer = options.JwtIssuer,
             Audience = options.JwtAudience,
+            NotBefore = now.UtcDateTime,
+            IssuedAt = now.UtcDateTime,
             Expires = expiresAt.UtcDateTime,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.JwtSigningKey)),
