@@ -293,7 +293,7 @@ per-BC coverage check                    /d:sonar.exclusions
 upload artifact (opencover +             /d:sonar.coverage.exclusions
                  cobertura)              /d:sonar.qualitygate.wait=true
                                        dotnet build (sin restore)
-                                       scanner end
+                                       scanner end (token only)
 ```
 
 `dotnet.yml` se **elimina** (redundante con `ci.yml`).
@@ -427,7 +427,8 @@ Bajo esta definición:
    (`ci/Check-BcCoverage.ps1`) y el upload del artifact.
 5. **Reescribir `sonarqube.yml`** para descargar el artifact y
    pasar `sonar.cs.opencover.reportsPaths` + exclusiones +
-   `sonar.qualitygate.wait=true` al scanner.
+   `sonar.qualitygate.wait=true` al `scanner begin` (no al `end`; el
+   plugin C# actual rechaza la propiedad en la fase `end`).
 6. **Eliminar `dotnet.yml`** del repo.
 7. **Empujar el PR**. Verificar en el run:
    - `ci.yml` verde, per-BC check mostrando cobertura real.

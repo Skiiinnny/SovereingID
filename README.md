@@ -164,7 +164,7 @@ Sonar analysis runs in `.github/workflows/sonarqube.yml` (`windows-latest`), dow
 - `sonar.cs.opencover.reportsPaths`
 - `sonar.exclusions`
 - `sonar.coverage.exclusions`
-- `sonar.qualitygate.wait=true`
+- `sonar.qualitygate.wait=true` (on `dotnet-sonarscanner begin`, not `end`)
 
 ### SonarCloud in CI
 

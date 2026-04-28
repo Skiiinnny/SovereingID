@@ -125,7 +125,8 @@
     - `/d:sonar.cs.opencover.reportsPaths="coverage/**/coverage.opencover.xml"`
     - `/d:sonar.exclusions="src/bc-auth/SovereignID.Auth.Api/wwwroot/**,src/legacy/**"`
     - `/d:sonar.coverage.exclusions="src/legacy/**,**/*Marker.cs,**/Program.cs"`
-  - En el `scanner end`, añadir `/d:sonar.qualitygate.wait=true`.
+  - En el `scanner begin`, añadir `/d:sonar.qualitygate.wait=true`
+    (el plugin C# no admite esta propiedad en `scanner end`).
 - [x] 6.3 Mantener el paso *"Build only (fork PR / no token)"* sin
   cambios para PRs desde forks.
 - [x] 6.4 Quitar cualquier otra invocación a `dotnet test` dentro de
@@ -170,8 +171,7 @@
 - [ ] 9.3 Confirmar en el mismo PR que `sonarqube.yml`:
   - Descarga el artifact correctamente.
   - Pasa al scanner `begin` las 3 propiedades Sonar (paths,
-    exclusions, coverage.exclusions) y al `end` el
-    `sonar.qualitygate.wait=true`.
+    exclusions, coverage.exclusions) y `sonar.qualitygate.wait=true`.
   - El paso "Build and analyze" devuelve exit 0.
 - [ ] 9.4 Verificar en SonarCloud que tras el merge el proyecto
   reporta:

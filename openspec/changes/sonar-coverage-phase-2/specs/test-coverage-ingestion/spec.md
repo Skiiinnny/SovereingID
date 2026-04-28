@@ -243,10 +243,11 @@ Triggers SHALL be aligned: both workflows activate on `push` to
 
 #### Scenario: Sonar workflow waits for the gate verdict
 
-- **WHEN** the scanner `end` step runs
+- **WHEN** the scanner `begin` step runs
 - **THEN** the command line includes `/d:sonar.qualitygate.wait=true`
-- **AND** the step returns the Quality Gate status as its own
-  exit code (zero only if the gate passed)
+- **AND** the `scanner end` step returns the Quality Gate status as
+  its own exit code (zero only if the gate passed), after analysis
+  upload and gate polling configured during `begin`
 
 ### Requirement: The `Integration` test category is reserved for external I/O
 
