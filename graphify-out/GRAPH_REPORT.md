@@ -1,7 +1,7 @@
 # Graph Report - sovereign-id-openspec  (2026-05-03)
 
 ## Corpus Check
-- 171 files · ~52,553 words
+- 171 files · ~52,575 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary

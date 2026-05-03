@@ -89,7 +89,7 @@
 - [x] `dotnet test` is green for `Auth.Domain.Tests` and `Auth.Application.Tests`.
 - [x] Zero Nethereum references in `Auth.Domain` or `Auth.Application`
   (verified by existing architecture tests).
-- [ ] Commit checkpoint: "feat(auth): domain + application for SIWE flow".
+- [x] Commit checkpoint: "feat(auth): domain + application for SIWE flow".
 
 ---
 
@@ -300,7 +300,7 @@
 - [x] All seven integration tests pass in-process.
 - [x] All architecture tests still pass.
 - [x] Commit checkpoint: "feat(auth): Auth.Api + frontend + integration tests".
-- [ ] Open PR "feat(auth): Phase 2 — SIWE authentication (endpoints,
+- [x] Open PR "feat(auth): Phase 2 — SIWE authentication (endpoints,
   JWT, demo page)".
 
 ---
