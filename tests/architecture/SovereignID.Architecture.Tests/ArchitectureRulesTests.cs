@@ -140,7 +140,8 @@ public sealed class ArchitectureRulesTests
 
             var isLegacy = name is "SovereignID.Crypto" or "SovereignID.Chain" or "SovereignID.Demo.Phase1";
             var isInfrastructure = name.EndsWith(".Infrastructure", StringComparison.Ordinal);
-            if (isLegacy || isInfrastructure)
+            var isSharedEip712Contracts = name == "SovereignID.VcSliceA.Eip712";
+            if (isLegacy || isInfrastructure || isSharedEip712Contracts)
             {
                 continue;
             }

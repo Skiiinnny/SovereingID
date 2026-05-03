@@ -9,6 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SovereignID.Verifier.Domain\SovereignID.Verifier.Domain.csproj" />
     <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.VcSliceA.Eip712\SovereignID.VcSliceA.Eip712.csproj" />
   </ItemGroup>
 
 </Project>
