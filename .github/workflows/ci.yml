@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  dotnet:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,4 +26,15 @@ jobs:
         run: dotnet build "SovereignID.sln" -c Release --no-restore
 
       - name: Test (exclude integration)
-        run: dotnet test "SovereignID.sln" -c Release --no-build --filter "Category!=Integration"
+        run: dotnet test "SovereignID.sln" -c Release --no-build --filter "Category!=Integration" --settings coverlet.runsettings --results-directory coverage --logger trx
+
+      - name: Enforce per-BC coverage floor
+        shell: pwsh
+        run: ./ci/Check-BcCoverage.ps1 -CoberturaPath "coverage/**/coverage.cobertura.xml" -Threshold 70
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7

@@ -6,8 +6,8 @@ namespace SovereignID.Architecture.Tests;
 
 public sealed class ArchitectureRulesTests
 {
-    private static readonly Lazy<IReadOnlyDictionary<string, Assembly>> Assemblies = new(LoadAssemblies);
-    private static readonly Lazy<IReadOnlyDictionary<string, IReadOnlyCollection<string>>> ProjectReferences = new(LoadProjectReferences);
+    private static readonly Lazy<Dictionary<string, Assembly>> Assemblies = new(LoadAssemblies);
+    private static readonly Lazy<Dictionary<string, List<string>>> ProjectReferences = new(LoadProjectReferences);
 
     [Fact]
     public void SharedKernel_Domain_Has_No_SovereignID_Dependencies()
@@ -183,7 +183,7 @@ public sealed class ArchitectureRulesTests
         }
     }
 
-    private static void AssertOnlyAllowedProjectReferences(string assemblyName, string ruleName, ISet<string> allowed)
+    private static void AssertOnlyAllowedProjectReferences(string assemblyName, string ruleName, HashSet<string> allowed)
     {
         if (!ProjectReferences.Value.TryGetValue(assemblyName, out var references))
         {
@@ -213,7 +213,7 @@ public sealed class ArchitectureRulesTests
         throw new InvalidOperationException($"Missing assembly {assemblyName}.");
     }
 
-    private static IReadOnlyDictionary<string, Assembly> LoadAssemblies()
+    private static Dictionary<string, Assembly> LoadAssemblies()
     {
         var map = new Dictionary<string, Assembly>(StringComparer.Ordinal);
         var baseDirectory = AppContext.BaseDirectory;
@@ -263,13 +263,13 @@ public sealed class ArchitectureRulesTests
         throw new DirectoryNotFoundException("Could not locate repository root containing SovereignID.sln.");
     }
 
-    private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> LoadProjectReferences()
+    private static Dictionary<string, List<string>> LoadProjectReferences()
     {
         var repoRoot = FindRepositoryRoot();
         var srcRoot = Path.Combine(repoRoot, "src");
         var projectFiles = Directory.GetFiles(srcRoot, "*.csproj", SearchOption.AllDirectories);
         var projectByPath = projectFiles.ToDictionary(Path.GetFullPath, p => Path.GetFileNameWithoutExtension(p), StringComparer.OrdinalIgnoreCase);
-        var result = new Dictionary<string, IReadOnlyCollection<string>>(StringComparer.Ordinal);
+        var result = new Dictionary<string, List<string>>(StringComparer.Ordinal);
 
         foreach (var csproj in projectFiles)
         {

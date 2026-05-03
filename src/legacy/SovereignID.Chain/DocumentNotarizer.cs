@@ -66,7 +66,7 @@ public sealed class DocumentNotarizer
             return false;
         }
 
-        var argHex = "0x" + input.Substring(10, 64);
+        var argHex = string.Concat("0x".AsSpan(), input.AsSpan(10, 64));
         if (!string.Equals(argHex, expectedHex, StringComparison.OrdinalIgnoreCase))
         {
             return false;

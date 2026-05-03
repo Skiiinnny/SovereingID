@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SovereignID.Auth.Application\SovereignID.Auth.Application.csproj" />
+    <ProjectReference Include="..\SovereignID.Auth.Infrastructure\SovereignID.Auth.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
