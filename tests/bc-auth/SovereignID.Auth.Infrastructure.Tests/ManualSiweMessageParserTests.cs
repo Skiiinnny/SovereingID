@@ -11,44 +11,50 @@ public class ManualSiweMessageParserTests
         var parser = new ManualSiweMessageParser();
         var payload = CanonicalPayload();
 
-        var message = await parser.ParseAsync(payload, CancellationToken.None);
+        var result = await parser.ParseAsync(payload, CancellationToken.None);
 
+        Assert.True(result.IsSuccess);
+        var message = result.Value!;
         Assert.Equal("service.org", message.Domain);
         Assert.Equal("0xC02aaa39b223FE8D0A0e5C4F27eAD9083C756Cc2", message.Address.Value);
         Assert.Equal(11155111, message.ChainId);
         Assert.Equal("32891756b8f249f39ac0f53f6f38f9dd", message.Nonce.Value);
         Assert.Equal(2, message.Resources.Count);
+        Assert.Equal(payload, message.OriginalPayload);
     }
 
     [Fact]
-    public async Task Parse_MissingChainId_ThrowsSiweParseFailed()
+    public async Task Parse_MissingChainId_ReturnsSiweParseFailed()
     {
         var parser = new ManualSiweMessageParser();
         var payload = CanonicalPayload().Replace("Chain ID: 11155111\n", string.Empty, StringComparison.Ordinal);
 
-        var ex = await Assert.ThrowsAsync<AuthDomainException>(() => parser.ParseAsync(payload, CancellationToken.None));
+        var result = await parser.ParseAsync(payload, CancellationToken.None);
 
-        Assert.Equal("siwe_parse_failed", ex.Error.Code);
+        Assert.True(result.IsFailure);
+        Assert.Equal("siwe_parse_failed", result.Error!.Code);
     }
 
     [Fact]
-    public async Task Parse_MalformedAddress_ThrowsSiweParseFailed()
+    public async Task Parse_MalformedAddress_ReturnsSiweParseFailed()
     {
         var parser = new ManualSiweMessageParser();
         var payload = CanonicalPayload().Replace("0xC02aaa39b223FE8D0A0e5C4F27eAD9083C756Cc2", "0x1234", StringComparison.Ordinal);
 
-        var ex = await Assert.ThrowsAsync<AuthDomainException>(() => parser.ParseAsync(payload, CancellationToken.None));
-        Assert.Equal("siwe_parse_failed", ex.Error.Code);
+        var result = await parser.ParseAsync(payload, CancellationToken.None);
+        Assert.True(result.IsFailure);
+        Assert.Equal("siwe_parse_failed", result.Error!.Code);
     }
 
     [Fact]
-    public async Task Parse_VersionNotOne_ThrowsSiweParseFailed()
+    public async Task Parse_VersionNotOne_ReturnsSiweParseFailed()
     {
         var parser = new ManualSiweMessageParser();
         var payload = CanonicalPayload().Replace("Version: 1", "Version: 2", StringComparison.Ordinal);
 
-        var ex = await Assert.ThrowsAsync<AuthDomainException>(() => parser.ParseAsync(payload, CancellationToken.None));
-        Assert.Equal("siwe_parse_failed", ex.Error.Code);
+        var result = await parser.ParseAsync(payload, CancellationToken.None);
+        Assert.True(result.IsFailure);
+        Assert.Equal("siwe_parse_failed", result.Error!.Code);
     }
 
     [Fact]
@@ -59,13 +65,16 @@ public class ManualSiweMessageParserTests
         var payload1 = CanonicalPayload(resourcesCount: 1);
         var payload2 = CanonicalPayload(resourcesCount: 2);
 
-        var m0 = await parser.ParseAsync(payload0, CancellationToken.None);
-        var m1 = await parser.ParseAsync(payload1, CancellationToken.None);
-        var m2 = await parser.ParseAsync(payload2, CancellationToken.None);
+        var r0 = await parser.ParseAsync(payload0, CancellationToken.None);
+        var r1 = await parser.ParseAsync(payload1, CancellationToken.None);
+        var r2 = await parser.ParseAsync(payload2, CancellationToken.None);
 
-        Assert.Empty(m0.Resources);
-        Assert.Single(m1.Resources);
-        Assert.Equal(2, m2.Resources.Count);
+        Assert.True(r0.IsSuccess);
+        Assert.True(r1.IsSuccess);
+        Assert.True(r2.IsSuccess);
+        Assert.Empty(r0.Value!.Resources);
+        Assert.Single(r1.Value!.Resources);
+        Assert.Equal(2, r2.Value!.Resources.Count);
     }
 
     [Fact]
@@ -74,9 +83,10 @@ public class ManualSiweMessageParserTests
         var parser = new ManualSiweMessageParser();
         var payload = CanonicalPayload().Replace("Chain ID: 11155111", "Chain ID: 42161", StringComparison.Ordinal);
 
-        var message = await parser.ParseAsync(payload, CancellationToken.None);
+        var result = await parser.ParseAsync(payload, CancellationToken.None);
 
-        Assert.Equal(42161, message.ChainId);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(42161, result.Value!.ChainId);
     }
 
     private static string CanonicalPayload(bool includeResources = true, int resourcesCount = 2)

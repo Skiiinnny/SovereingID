@@ -29,3 +29,4 @@ appsettings.Development.json
 *.nupkg
 /.cursor
 .vscode/settings.json
+/graphify-out/cache

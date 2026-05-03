@@ -290,9 +290,10 @@
   - Add a "Run the Auth demo" section pointing to the API project and
     the `AUTH_JWT_SIGNING_KEY` env var.
 - [x] Do NOT modify `AGENTS.md` (conventions unchanged).
-- [ ] Update `AGENTS.md` Active Phase pointer ONLY after tasks are
-  archived (per experimental workflow rules); out of scope for this
-  implementation change.
+- [x] Align `AGENTS.md` with reality: explain roadmap (README) vs OpenSpec
+  **active change**, fix stale Phase 1 path (folder archived), point **Current
+  change** at `phase-2-siwe-auth/tasks.md` (supersedes “update only after
+  archive” to avoid a broken link and reader confusion).
 
 ### 3.9 Week 3 deliverable
 - [x] Browser demo renders a JWT after a real MetaMask signature.

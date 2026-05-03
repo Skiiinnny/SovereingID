@@ -20,15 +20,16 @@ public class VerifySiweCommandHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ParseThrows_ReturnsSiweParseFailed()
+    public async Task HandleAsync_ParseFailure_ReturnsSiweParseFailed()
     {
         var fixture = await TestFixture.HappyPathAsync();
-        fixture.Parser.Throws = new InvalidOperationException("bad parse");
+        fixture.Parser.ParseFailure = AuthErrors.SiweParseFailed("bad parse");
 
         var result = await fixture.Handler.HandleAsync(fixture.Command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("siwe_parse_failed", result.Error?.Code);
+        Assert.Equal("bad parse", result.Error?.Detail);
     }
 
     [Fact]
@@ -154,18 +155,18 @@ public class VerifySiweCommandHandlerTests
     private sealed class FakeParser : ISiweMessageParser
     {
         private readonly SiweMessage parsed;
-        public Exception? Throws { get; set; }
+        public AuthError? ParseFailure { get; set; }
 
         public FakeParser(SiweMessage parsed) => this.parsed = parsed;
 
-        public Task<SiweMessage> ParseAsync(string payload, CancellationToken cancellationToken)
+        public Task<Result<SiweMessage, AuthError>> ParseAsync(string payload, CancellationToken cancellationToken)
         {
-            if (Throws is not null)
+            if (ParseFailure is not null)
             {
-                throw Throws;
+                return Task.FromResult(Result<SiweMessage, AuthError>.Failure(ParseFailure));
             }
 
-            return Task.FromResult(parsed);
+            return Task.FromResult(Result<SiweMessage, AuthError>.Success(parsed));
         }
     }
 

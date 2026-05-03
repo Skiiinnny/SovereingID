@@ -31,15 +31,13 @@ public sealed class VerifySiweCommandHandler : ICommandHandler<VerifySiweCommand
 
     public async Task<Result<VerifySiweResult, AuthError>> HandleAsync(VerifySiweCommand input, CancellationToken cancellationToken)
     {
-        SiweMessage siweMessage;
-        try
+        var parseResult = await parser.ParseAsync(input.Message, cancellationToken);
+        if (parseResult.IsFailure)
         {
-            siweMessage = await parser.ParseAsync(input.Message, cancellationToken);
+            return Result<VerifySiweResult, AuthError>.Failure(parseResult.Error!);
         }
-        catch (Exception ex)
-        {
-            return Result<VerifySiweResult, AuthError>.Failure(AuthErrors.SiweParseFailed(ex.Message));
-        }
+
+        var siweMessage = parseResult.Value!;
 
         var challenge = await repository.FindByNonceAsync(siweMessage.Nonce, cancellationToken);
         if (challenge is null)

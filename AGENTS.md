@@ -12,6 +12,8 @@ The developer is a Senior .NET engineer learning blockchain/identity concepts
 while building a portfolio product. Favor correctness and clean architecture
 over brevity. Always explain crypto concepts when they appear in code.
 
+**Human contributors:** see [`docs/onboarding.md`](docs/onboarding.md) for clone/build/CI and how this repo’s docs relate to `openspec/` and this file.
+
 ## Spec-Driven Rules
 
 1. **Read the spec before writing code.** Always check `openspec/specs/` and
@@ -55,7 +57,31 @@ over brevity. Always explain crypto concepts when they appear in code.
 - Do not use `.Wait()` or block on async
 - Do not log private keys, even partially
 
-## Active Phase
+## Active OpenSpec change (not the README roadmap)
 
-Currently in: **Phase 1 — Crypto Foundations**
-Active tasks: `openspec/changes/phase-1-crypto-foundations/tasks.md`
+**Two different “phases”:**
+
+- **README → Project status** — Product roadmap (which milestones are already shipped in the repo, e.g. crypto + SIWE demos). Use that table for **scope and marketing truth**.
+- **This section** — Which folder under `openspec/changes/` holds the **`tasks.md` you must follow** for spec-driven implementation. That folder name does not always match the roadmap row number.
+
+**Current change (follow this `tasks.md`):**  
+`openspec/changes/phase-2-siwe-auth/tasks.md` — Phase 2 — SIWE authentication.
+
+**Reference (archived change):**  
+Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`.
+
+When the current change is complete and moved to `openspec/changes/archive/`, update the **Current change** path above to the next active folder.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues in this clone’s default remote (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical roles use the default label strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Multi-context: one `CONTEXT.md` per bounded context, indexed from `CONTEXT-MAP.md` at the repo root; system ADRs in `docs/adr/`. See `docs/agents/domain.md`. Glossary files are added when domain language is fixed; the map lists their **paths**, not a guarantee that every file is populated yet.

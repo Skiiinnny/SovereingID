@@ -7,7 +7,7 @@ namespace SovereignID.Auth.Infrastructure.Siwe;
 
 public sealed class ManualSiweMessageParser : ISiweMessageParser
 {
-    public Task<SiweMessage> ParseAsync(string payload, CancellationToken cancellationToken)
+    public Task<Result<SiweMessage, AuthError>> ParseAsync(string payload, CancellationToken cancellationToken)
     {
         try
         {
@@ -66,24 +66,27 @@ public sealed class ManualSiweMessageParser : ISiweMessageParser
                 throw new FormatException($"Line {i + 1}: unsupported SIWE line '{line}'.");
             }
 
-            return Task.FromResult(new SiweMessage(
-                Domain: domain,
-                Address: EthereumAddress.Create(addressLine),
-                Statement: statement,
-                Uri: new Uri(uri, UriKind.Absolute),
-                Version: 1,
-                ChainId: chainId,
-                Nonce: nonce,
-                IssuedAt: issuedAt,
-                ExpirationTime: optionalFields.ExpirationTime,
-                NotBefore: optionalFields.NotBefore,
-                RequestId: optionalFields.RequestId,
-                Resources: optionalFields.Resources,
-                OriginalPayload: payload));
+            return Task.FromResult(
+                Result<SiweMessage, AuthError>.Success(
+                    new SiweMessage(
+                        Domain: domain,
+                        Address: EthereumAddress.Create(addressLine),
+                        Statement: statement,
+                        Uri: new Uri(uri, UriKind.Absolute),
+                        Version: 1,
+                        ChainId: chainId,
+                        Nonce: nonce,
+                        IssuedAt: issuedAt,
+                        ExpirationTime: optionalFields.ExpirationTime,
+                        NotBefore: optionalFields.NotBefore,
+                        RequestId: optionalFields.RequestId,
+                        Resources: optionalFields.Resources,
+                        OriginalPayload: payload)));
         }
-        catch (Exception ex) when (ex is not AuthDomainException)
+        catch (Exception ex)
         {
-            throw new AuthDomainException(AuthErrors.SiweParseFailed(ex.Message));
+            return Task.FromResult(
+                Result<SiweMessage, AuthError>.Failure(AuthErrors.SiweParseFailed(ex.Message)));
         }
     }
 
