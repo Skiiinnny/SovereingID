@@ -23,4 +23,4 @@
 ## 5. Verificación y cierre
 
 - [x] 5.1 `dotnet test SovereignID.sln` y corregir cualquier regresión.
-- [ ] 5.2 Tras el siguiente análisis publicado en SonarQube, comprobar que los issues afectados figuran resueltos o como supresión aceptada según el equipo, y alinear nombres de reglas si el servidor difiere (Community vs. Enterprise). *(Seguimiento manual tras CI; criterio: csharpsquid S2094/S2326, external_roslyn CA1859/CA1845 en el proyecto `Skiiinnny_SovereingID`.)*
+- [x] 5.2 Tras el siguiente análisis publicado en SonarQube, comprobar que los issues afectados figuran resueltos o como supresión aceptada según el equipo, y alinear nombres de reglas si el servidor difiere (Community vs. Enterprise). *(Seguimiento manual tras CI; criterio: csharpsquid S2094/S2326, external_roslyn CA1859/CA1845 en el proyecto `Skiiinnny_SovereingID`.)*

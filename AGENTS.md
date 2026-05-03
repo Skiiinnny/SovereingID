@@ -65,10 +65,12 @@ over brevity. Always explain crypto concepts when they appear in code.
 - **This section** — Which folder under `openspec/changes/` holds the **`tasks.md` you must follow** for spec-driven implementation. That folder name does not always match the roadmap row number.
 
 **Current change (follow this `tasks.md`):**  
-`openspec/changes/phase-2-siwe-auth/tasks.md` — Phase 2 — SIWE authentication.
+None — no product-phase OpenSpec change is active. In-flight repo work (example): `openspec/changes/sonar-coverage-phase-2/tasks.md`. When Phase 3 (or the next milestone) is proposed, point this line at its folder.
 
-**Reference (archived change):**  
-Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`.
+**Reference (archived changes):**  
+Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`.  
+Phase 2 — SIWE authentication → `openspec/changes/archive/2026-05-03-phase-2-siwe-auth/`.  
+SonarQube debt (Fase 2 alignment) → `openspec/changes/archive/2026-05-03-sonar-debt-phase-2/`.
 
 When the current change is complete and moved to `openspec/changes/archive/`, update the **Current change** path above to the next active folder.
 
