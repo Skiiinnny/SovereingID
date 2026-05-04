@@ -8562,6 +8562,18 @@
       "_src": "sovereignid_crypto_signatureverifier_signatureverifier_verify",
       "_tgt": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_missing_vp_proof_fails",
       "source": "sovereignid_crypto_signatureverifier_signatureverifier_verify",
+      "target": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_invalid_vc_document_returns_before_vp_proof_missing"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests\\bc-verifier\\SovereignID.Verifier.Domain.Tests\\PresentationVerifierTests.cs",
+      "source_location": "L210",
+      "weight": 1.0,
+      "_src": "sovereignid_crypto_signatureverifier_signatureverifier_verify",
+      "_tgt": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_missing_vp_proof_fails",
+      "source": "sovereignid_crypto_signatureverifier_signatureverifier_verify",
       "target": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_missing_vp_proof_fails"
     },
     {
@@ -9293,6 +9305,18 @@
       "weight": 1.0,
       "_src": "sovereignid_sharedkernel_domain_ethrsepoliadidparser_ethrsepoliadidparser_parse",
       "_tgt": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_invalid_vc_document_returns_before_vp_proof_missing",
+      "source": "sovereignid_sharedkernel_domain_ethrsepoliadidparser_ethrsepoliadidparser_parse",
+      "target": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_invalid_vc_document_returns_before_vp_proof_missing"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests\\bc-verifier\\SovereignID.Verifier.Domain.Tests\\PresentationVerifierTests.cs",
+      "source_location": "L205",
+      "weight": 1.0,
+      "_src": "sovereignid_sharedkernel_domain_ethrsepoliadidparser_ethrsepoliadidparser_parse",
+      "_tgt": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_missing_vp_proof_fails",
       "source": "sovereignid_sharedkernel_domain_ethrsepoliadidparser_ethrsepoliadidparser_parse",
       "target": "sovereignid_verifier_domain_tests_presentationverifiertests_presentationverifiertests_verify_invalid_vc_document_returns_before_vp_proof_missing"
     },
