@@ -198,6 +198,29 @@ public class PresentationVerifierTests
         Assert.Equal("vc_expirationDate_expired", outcome.ErrorCode);
     }
 
+    [Fact]
+    public async Task Verify_invalid_vc_document_returns_before_vp_proof_missing()
+    {
+        var (vc, _, holderDid, _, _) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("33333333-4444-4333-8444-666666666666"));
+
+        var vcNode = JsonNode.Parse(vc)!;
+        vcNode["type"]!.AsArray().Add("InvalidExtraCredentialType");
+
+        var vp = new JsonObject
+        {
+            ["type"] = new JsonArray("VerifiablePresentation"),
+            ["holder"] = holderDid,
+            ["verifiableCredential"] = new JsonArray(vcNode),
+        };
+
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("vc_type_invalid", outcome.ErrorCode);
+        Assert.NotEqual("vp_proof_missing", outcome.ErrorCode);
+    }
+
     private sealed class TestClock : IClock
     {
         private readonly DateTimeOffset instant;
