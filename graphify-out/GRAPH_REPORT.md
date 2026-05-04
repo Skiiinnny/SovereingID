@@ -1,12 +1,12 @@
 # Graph Report - sovereign-id-openspec  (2026-05-03)
 
 ## Corpus Check
-- 221 files · ~64,980 words
+- 227 files · ~70,723 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 545 nodes · 605 edges · 41 communities detected
-- Extraction: 73% EXTRACTED · 27% INFERRED · 0% AMBIGUOUS · INFERRED: 162 edges (avg confidence: 0.8)
+- 611 nodes · 753 edges · 41 communities detected
+- Extraction: 74% EXTRACTED · 26% INFERRED · 0% AMBIGUOUS · INFERRED: 198 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -28,8 +28,8 @@
 - [[_COMMUNITY_Community 15|Community 15]]
 - [[_COMMUNITY_Community 16|Community 16]]
 - [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
 - [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
 - [[_COMMUNITY_Community 22|Community 22]]
 - [[_COMMUNITY_Community 23|Community 23]]
@@ -54,181 +54,179 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `Create()` - 29 edges
-2. `AuthEndpointsTests` - 16 edges
-3. `ArchitectureRulesTests` - 13 edges
-4. `PresentationVerifierTests` - 12 edges
-5. `Generate()` - 9 edges
-6. `VerifySiweCommandHandlerTests` - 8 edges
-7. `ManualSiweMessageParserTests` - 8 edges
-8. `AuthErrors` - 7 edges
-9. `ManualSiweMessageParser` - 7 edges
-10. `ValueObjectsTests` - 7 edges
+2. `TituloGraduacionVcDocumentValidatorTests` - 26 edges
+3. `PresentationVerifierTests` - 18 edges
+4. `AuthEndpointsTests` - 16 edges
+5. `ArchitectureRulesTests` - 14 edges
+6. `PresentationVerifierBoundaryTests` - 11 edges
+7. `TituloGraduacionVcDocumentValidator` - 10 edges
+8. `Generate()` - 9 edges
+9. `VerifySiweCommandHandlerTests` - 8 edges
+10. `ManualSiweMessageParserTests` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `TestClock` --inherits--> `IClock`  [EXTRACTED]
-  tests\bc-auth\SovereignID.Auth.IntegrationTests\TestClock.cs →   _Bridges community 2 → community 5_
-- `FakeNonceGenerator` --inherits--> `INonceGenerator`  [EXTRACTED]
-  tests\bc-auth\SovereignID.Auth.Application.Tests\GenerateNonceQueryHandlerTests.cs →   _Bridges community 2 → community 10_
+  tests\bc-auth\SovereignID.Auth.IntegrationTests\TestClock.cs →   _Bridges community 4 → community 2_
 - `FakeRepository` --inherits--> `IAuthChallengeRepository`  [EXTRACTED]
-  tests\bc-auth\SovereignID.Auth.Application.Tests\VerifySiweCommandHandlerTests.cs →   _Bridges community 10 → community 7_
+  tests\bc-auth\SovereignID.Auth.Application.Tests\VerifySiweCommandHandlerTests.cs →   _Bridges community 2 → community 11_
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.08
-Nodes (11): ISiweSignatureVerifier, NethereumSiweSignatureVerifier, GenerateNonceQueryHandlerTests, FakeSignatureVerifier, TestFixture, VerifySiweCommandHandlerTests, ChainIdTests, NonceTests (+3 more)
+Cohesion: 0.11
+Nodes (11): IClassFixture, IIssuerVcIntegritySigner, AuthEndpointsTests, FromEthECKey(), FromPrivateKey(), Generate(), SignatureVerifier, KeyPairTests (+3 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.1
-Nodes (9): ISiweMessageParser, ManualSiweMessageParser, OptionalFieldsState, FakeParser, AuthErrors, Create(), Failure(), Success() (+1 more)
+Cohesion: 0.07
+Nodes (12): ISiweSignatureVerifier, NethereumSiweSignatureVerifier, FakeSignatureVerifier, Create(), Hex32Regex(), ToString(), ChainIdTests, NonceTests (+4 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.06
-Nodes (16): IClock, SystemClock, INonceGenerator, SecureRandomNonceGenerator, FakeClock, FakeClock, FakeNonceGenerator, Create() (+8 more)
+Nodes (14): BackgroundService, IAuthChallengeRepository, ICommandHandler, IGuidGenerator, GuidGenerator, VerifyPresentationCommandHandler, AuthChallengeEvictionHostedService, InMemoryAuthChallengeRepository (+6 more)
 
 ### Community 3 - "Community 3"
+Cohesion: 0.1
+Nodes (9): ISiweMessageParser, ManualSiweMessageParser, OptionalFieldsState, FakeParser, AuthErrors, Create(), Failure(), Success() (+1 more)
+
+### Community 4 - "Community 4"
+Cohesion: 0.06
+Nodes (15): IClock, SystemClock, INonceGenerator, SecureRandomNonceGenerator, FakeClock, FakeNonceGenerator, FakeClock, FakeNonceGenerator (+7 more)
+
+### Community 5 - "Community 5"
+Cohesion: 0.19
+Nodes (2): PresentationVerifierBoundaryTests, PresentationVerifierTests
+
+### Community 6 - "Community 6"
 Cohesion: 0.07
 Nodes (11): DocumentNotarizer, DocumentNotarizerIntegrationTests, HashHelper, HashHelperTests, IBlockchainAnchor, IBlockchainQuery, IClock, IGuidGenerator (+3 more)
 
-### Community 4 - "Community 4"
-Cohesion: 0.1
-Nodes (7): EmbeddedTituloGraduacionSubjectValidator, EmbeddedTituloGraduacionVpChain, PresentationEip712ProofValueReader, PresentationVerifier, EthrSepoliaDidParser, EthrSepoliaDidParserTests, VerifiablePresentationTypedData
-
-### Community 5 - "Community 5"
-Cohesion: 0.08
-Nodes (11): BackgroundService, ICommandHandler, IGuidGenerator, GuidGenerator, VerifyPresentationCommandHandler, AuthChallengeEvictionHostedService, AuthChallenge, TestClock (+3 more)
-
-### Community 6 - "Community 6"
-Cohesion: 0.23
-Nodes (3): SignatureVerifier, SignatureVerifierTests, PresentationVerifierTests
-
 ### Community 7 - "Community 7"
 Cohesion: 0.15
-Nodes (7): IJwtTokenIssuer, IQueryHandler, GenerateNonceQueryHandler, FakeJwtTokenIssuer, FakeRepository, AuthChallengeTests, InMemoryAuthChallengeRepositoryTests
+Nodes (2): TituloGraduacionVcDocumentValidatorTests, TituloGraduacionVcDocumentConstants
 
 ### Community 8 - "Community 8"
-Cohesion: 0.28
-Nodes (4): IClassFixture, IIssuerVcIntegritySigner, AuthEndpointsTests, NethereumIssuerVcIntegritySigner
+Cohesion: 0.13
+Nodes (8): AuthEndpoints, GenerateNonceQueryHandlerTests, TestFixture, VerifySiweCommandHandlerTests, ICommand, ICommandHandler, IQuery, IQueryHandler
 
 ### Community 9 - "Community 9"
-Cohesion: 0.19
-Nodes (1): ArchitectureRulesTests
+Cohesion: 0.11
+Nodes (6): EmbeddedTituloGraduacionVpChain, PresentationEip712ProofValueReader, PresentationVerifier, VerifierTituloGraduacionVcDocumentErrorMapper, VerifiablePresentationTypedData, VerifierTituloGraduacionVcDocumentErrorMapperTests
 
 ### Community 10 - "Community 10"
 Cohesion: 0.15
-Nodes (4): IAuthChallengeRepository, InMemoryAuthChallengeRepository, FakeNonceGenerator, SpyRepository
+Nodes (3): EthrSepoliaDidParser, EthrSepoliaDidParserTests, TituloGraduacionVcDocumentValidator
 
 ### Community 11 - "Community 11"
-Cohesion: 0.26
-Nodes (5): FromEthECKey(), FromPrivateKey(), Generate(), KeyPairTests, MessageSignerTests
+Cohesion: 0.15
+Nodes (7): IJwtTokenIssuer, IQueryHandler, GenerateNonceQueryHandler, FakeJwtTokenIssuer, FakeRepository, AuthChallengeTests, InMemoryAuthChallengeRepositoryTests
 
 ### Community 12 - "Community 12"
-Cohesion: 0.29
-Nodes (2): SepoliaClient, SepoliaClientIntegrationTests
+Cohesion: 0.18
+Nodes (1): ArchitectureRulesTests
 
 ### Community 13 - "Community 13"
-Cohesion: 0.32
-Nodes (2): TituloGraduacionClaimsValidatorTests, TituloGraduacionClaimsValidator
+Cohesion: 0.29
+Nodes (2): SepoliaClient, SepoliaClientIntegrationTests
 
 ### Community 14 - "Community 14"
 Cohesion: 0.6
 Nodes (5): buildSiweMessage(), randomNonce32(), setStatus(), signIn(), toIsoUtc()
 
 ### Community 15 - "Community 15"
-Cohesion: 0.33
-Nodes (4): ICommand, ICommandHandler, IQuery, IQueryHandler
-
-### Community 16 - "Community 16"
 Cohesion: 0.53
 Nodes (1): TituloGraduacionVcTypedData
 
-### Community 17 - "Community 17"
+### Community 16 - "Community 16"
 Cohesion: 0.4
 Nodes (1): IAuthChallengeRepository
 
-### Community 18 - "Community 18"
-Cohesion: 0.67
-Nodes (1): AuthEndpoints
-
-### Community 19 - "Community 19"
+### Community 17 - "Community 17"
 Cohesion: 0.5
 Nodes (2): AuthApiFactory, WebApplicationFactory
 
-### Community 21 - "Community 21"
+### Community 19 - "Community 19"
 Cohesion: 0.67
 Nodes (2): Exception, AuthDomainException
 
-### Community 22 - "Community 22"
+### Community 20 - "Community 20"
 Cohesion: 0.67
 Nodes (1): INonceGenerator
 
-### Community 23 - "Community 23"
+### Community 21 - "Community 21"
 Cohesion: 0.67
 Nodes (1): ISiweMessageParser
 
-### Community 24 - "Community 24"
+### Community 22 - "Community 22"
 Cohesion: 0.67
 Nodes (1): ISiweSignatureVerifier
 
-### Community 25 - "Community 25"
+### Community 23 - "Community 23"
+Cohesion: 0.67
+Nodes (1): IssuerTituloGraduacionDocumentErrorMapper
+
+### Community 24 - "Community 24"
 Cohesion: 0.67
 Nodes (1): IssuerVcIntegritySignRequestMapper
 
-### Community 26 - "Community 26"
+### Community 25 - "Community 25"
 Cohesion: 0.67
 Nodes (1): IIssuerVcIntegritySigner
 
-### Community 27 - "Community 27"
+### Community 26 - "Community 26"
 Cohesion: 0.67
 Nodes (1): VpEnvelopeParser
 
-### Community 28 - "Community 28"
+### Community 27 - "Community 27"
 Cohesion: 0.67
 Nodes (1): MessageSigner
 
-### Community 29 - "Community 29"
+### Community 28 - "Community 28"
 Cohesion: 1.0
 Nodes (1): Program
 
-### Community 30 - "Community 30"
+### Community 29 - "Community 29"
 Cohesion: 1.0
 Nodes (1): AuthApplicationMarker
 
-### Community 31 - "Community 31"
+### Community 30 - "Community 30"
 Cohesion: 1.0
 Nodes (1): AuthDomainMarker
 
-### Community 32 - "Community 32"
+### Community 31 - "Community 31"
 Cohesion: 1.0
 Nodes (1): AuthInfrastructureMarker
 
-### Community 33 - "Community 33"
+### Community 32 - "Community 32"
 Cohesion: 1.0
 Nodes (1): IssuerApplicationMarker
 
-### Community 34 - "Community 34"
+### Community 33 - "Community 33"
 Cohesion: 1.0
 Nodes (1): IssuerDomainMarker
 
-### Community 35 - "Community 35"
+### Community 34 - "Community 34"
 Cohesion: 1.0
 Nodes (1): IssuerInfrastructureMarker
 
-### Community 36 - "Community 36"
+### Community 35 - "Community 35"
 Cohesion: 1.0
 Nodes (1): VerifierApplicationMarker
 
-### Community 37 - "Community 37"
+### Community 36 - "Community 36"
 Cohesion: 1.0
 Nodes (1): VerifierDomainMarker
 
-### Community 38 - "Community 38"
+### Community 37 - "Community 37"
 Cohesion: 1.0
 Nodes (1): VerifierInfrastructureMarker
 
-### Community 39 - "Community 39"
+### Community 38 - "Community 38"
 Cohesion: 1.0
 Nodes (1): KernelInfrastructureMarker
+
+### Community 39 - "Community 39"
+Cohesion: 1.0
+Nodes (1): TituloGraduacionVcDocumentErrorCodes
 
 ### Community 40 - "Community 40"
 Cohesion: 1.0
@@ -239,59 +237,63 @@ Cohesion: 1.0
 Nodes (1): VerifiablePresentation712
 
 ## Knowledge Gaps
-- **16 isolated node(s):** `Program`, `AuthApplicationMarker`, `AuthDomainMarker`, `AuthInfrastructureMarker`, `OptionalFieldsState` (+11 more)
+- **17 isolated node(s):** `Program`, `AuthApplicationMarker`, `AuthDomainMarker`, `AuthInfrastructureMarker`, `OptionalFieldsState` (+12 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 9`** (14 nodes): `ArchitectureRulesTests`, `.Application_Layer_Has_No_Reference_To_Infrastructure()`, `.AssertOnlyAllowedProjectReferences()`, `.BC_Domain_Only_References_SharedKernel_Domain()`, `.BCs_Cannot_Reference_Each_Other()`, `.FindRepositoryRoot()`, `.GetAssembly()`, `.LoadAssemblies()`, `.LoadProjectReferences()`, `.Nethereum_Is_Confined_To_Infrastructure_And_Legacy()`, `.No_Project_Outside_Legacy_References_Legacy()`, `.No_Project_References_MediatR_Package()`, `.SharedKernel_Domain_Has_No_SovereignID_Dependencies()`, `ArchitectureRulesTests.cs`
+- **Thin community `Community 5`** (32 nodes): `.Verify()`, `.Parse()`, `PresentationVerifierBoundaryTests`, `.Verify_empty_presentation_json_fails()`, `.Verify_holder_did_invalid_fails()`, `.Verify_holder_missing_fails()`, `.Verify_invalid_vp_type_fails()`, `.Verify_missing_type_fails()`, `.Verify_missing_verifiableCredential_fails()`, `.Verify_non_object_root_fails()`, `.Verify_vc_not_object_fails()`, `.Verify_vp_type_not_array_fails()`, `.Verify_zero_embedded_credentials_fails()`, `PresentationVerifierTests`, `.Did()`, `.IssueVcAsync()`, `.Verify_expired_vc_fails()`, `.Verify_future_issuance_fails()`, `.Verify_holder_mismatch_subject_fails()`, `.Verify_invalid_vc_document_returns_before_vp_proof_missing()`, `.Verify_missing_vp_proof_fails()`, `.Verify_two_embedded_credentials_fails()`, `.Verify_valid_vp_passes()`, `.Verify_vc_proof_value_empty_fails()`, `.Verify_vp_proof_type_invalid_fails()`, `.Verify_vp_proof_value_empty_fails()`, `.Verify_vp_proof_value_missing_fails()`, `.Verify_vp_signature_recover_failed_on_bad_proof()`, `.Verify_wrong_holder_signature_fails()`, `.Verify_wrong_issuer_signature_fails()`, `.WrapVp()`, `PresentationVerifierBoundaryTests.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 12`** (8 nodes): `SepoliaClient`, `.GetBalanceEtherAsync()`, `.GetBlockNumberAsync()`, `SepoliaClientIntegrationTests`, `.GetBalanceEtherAsync_ForWellKnownAddress_IsNonNegative()`, `.GetBlockNumberAsync_ReturnsPositive()`, `SepoliaClient.cs`, `SepoliaClientIntegrationTests.cs`
+- **Thin community `Community 7`** (30 nodes): `TituloGraduacionVcDocumentValidatorTests`, `.BuildValidSignedRoot()`, `.BuildValidUnsignedRoot()`, `.ContextNegativeCases()`, `.ProofSignedNegativeCases()`, `.SubjectNegativeCases()`, `.TypeIdIssuerIssuanceNegativeCases()`, `.Validate()`, `.Validate_accepts_leap_year_award_date()`, `.Validate_rejects_award_date_with_exact_code()`, `.Validate_rejects_expired_when_expiration_before_now()`, `.Validate_rejects_extra_term_in_second_context()`, `.Validate_rejects_invalid_subject_did()`, `.Validate_rejects_wrong_second_context_iri()`, `.Validate_root_not_object_returns_code()`, `.Validate_signed_ok_with_proof()`, `.Validate_signed_proof_branch()`, `.Validate_signed_requires_proof()`, `.Validate_unsigned_context_branch()`, `.Validate_unsigned_expiration_date_bad_format_when_present()`, `.Validate_unsigned_golden_ok()`, `.Validate_unsigned_rejects_proof_present()`, `.Validate_unsigned_subject_branch()`, `.Validate_unsigned_type_id_issuer_issuance_branch()`, `.ValidateSigned()`, `.ValidateUnsigned()`, `TituloGraduacionVcDocumentConstants`, `.CreateSecondContextObject()`, `TituloGraduacionVcDocumentConstants.cs`, `TituloGraduacionVcDocumentValidatorTests.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 13`** (8 nodes): `TituloGraduacionClaimsValidatorTests`, `.Validate_accepts_valid_award_date()`, `.Validate_rejects_bad_award_date()`, `TituloGraduacionClaimsValidator.cs`, `TituloGraduacionClaimsValidatorTests.cs`, `TituloGraduacionClaimsValidator`, `.AwardDatePattern()`, `.Validate()`
+- **Thin community `Community 12`** (15 nodes): `ArchitectureRulesTests`, `.Application_Layer_Has_No_Reference_To_Infrastructure()`, `.AssertOnlyAllowedProjectReferences()`, `.BC_Domain_Only_References_SharedKernel_Domain()`, `.BCs_Cannot_Reference_Each_Other()`, `.FindRepositoryRoot()`, `.GetAssembly()`, `.Issuer_Domain_References_SharedKernel_And_VcSliceA_Document()`, `.LoadAssemblies()`, `.LoadProjectReferences()`, `.Nethereum_Is_Confined_To_Infrastructure_And_Legacy()`, `.No_Project_Outside_Legacy_References_Legacy()`, `.No_Project_References_MediatR_Package()`, `.SharedKernel_Domain_Has_No_SovereignID_Dependencies()`, `ArchitectureRulesTests.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 16`** (6 nodes): `TituloGraduacionVcTypedData`, `.CreateTypedData()`, `.NormalizeAddress()`, `.RecoverSignerAddress()`, `.Sign()`, `TituloGraduacionVcTypedData.cs`
+- **Thin community `Community 13`** (8 nodes): `SepoliaClient`, `.GetBalanceEtherAsync()`, `.GetBlockNumberAsync()`, `SepoliaClientIntegrationTests`, `.GetBalanceEtherAsync_ForWellKnownAddress_IsNonNegative()`, `.GetBlockNumberAsync_ReturnsPositive()`, `SepoliaClient.cs`, `SepoliaClientIntegrationTests.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 17`** (5 nodes): `IAuthChallengeRepository`, `.DeleteAsync()`, `.FindByNonceAsync()`, `.SaveAsync()`, `IAuthChallengeRepository.cs`
+- **Thin community `Community 15`** (6 nodes): `TituloGraduacionVcTypedData`, `.CreateTypedData()`, `.NormalizeAddress()`, `.RecoverSignerAddress()`, `.Sign()`, `TituloGraduacionVcTypedData.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 18`** (4 nodes): `AuthEndpoints`, `.MapAuth()`, `.ToProblem()`, `AuthEndpoints.cs`
+- **Thin community `Community 16`** (5 nodes): `IAuthChallengeRepository`, `.DeleteAsync()`, `.FindByNonceAsync()`, `.SaveAsync()`, `IAuthChallengeRepository.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 19`** (4 nodes): `AuthApiFactory`, `.ConfigureWebHost()`, `AuthApiFactory.cs`, `WebApplicationFactory`
+- **Thin community `Community 17`** (4 nodes): `AuthApiFactory`, `.ConfigureWebHost()`, `AuthApiFactory.cs`, `WebApplicationFactory`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (3 nodes): `Exception`, `AuthDomainException`, `AuthDomainException.cs`
+- **Thin community `Community 19`** (3 nodes): `Exception`, `AuthDomainException`, `AuthDomainException.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (3 nodes): `INonceGenerator`, `.NewAsync()`, `INonceGenerator.cs`
+- **Thin community `Community 20`** (3 nodes): `INonceGenerator`, `.NewAsync()`, `INonceGenerator.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (3 nodes): `ISiweMessageParser`, `.ParseAsync()`, `ISiweMessageParser.cs`
+- **Thin community `Community 21`** (3 nodes): `ISiweMessageParser`, `.ParseAsync()`, `ISiweMessageParser.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (3 nodes): `ISiweSignatureVerifier`, `.RecoverAddressAsync()`, `ISiweSignatureVerifier.cs`
+- **Thin community `Community 22`** (3 nodes): `ISiweSignatureVerifier`, `.RecoverAddressAsync()`, `ISiweSignatureVerifier.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (3 nodes): `IssuerVcIntegritySignRequestMapper.cs`, `IssuerVcIntegritySignRequestMapper`, `.ToEip712()`
+- **Thin community `Community 23`** (3 nodes): `IssuerTituloGraduacionDocumentErrorMapper.cs`, `IssuerTituloGraduacionDocumentErrorMapper`, `.Map()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (3 nodes): `IIssuerVcIntegritySigner.cs`, `IIssuerVcIntegritySigner`, `.SignAsync()`
+- **Thin community `Community 24`** (3 nodes): `IssuerVcIntegritySignRequestMapper.cs`, `IssuerVcIntegritySignRequestMapper`, `.ToEip712()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (3 nodes): `VpEnvelopeParser`, `.TryParse()`, `VpEnvelopeParser.cs`
+- **Thin community `Community 25`** (3 nodes): `IIssuerVcIntegritySigner.cs`, `IIssuerVcIntegritySigner`, `.SignAsync()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (3 nodes): `MessageSigner`, `.Sign()`, `MessageSigner.cs`
+- **Thin community `Community 26`** (3 nodes): `VpEnvelopeParser`, `.TryParse()`, `VpEnvelopeParser.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `Program`, `Program.cs`
+- **Thin community `Community 27`** (3 nodes): `MessageSigner`, `.Sign()`, `MessageSigner.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `AuthApplicationMarker`, `AuthApplicationMarker.cs`
+- **Thin community `Community 28`** (2 nodes): `Program`, `Program.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (2 nodes): `AuthDomainMarker`, `AuthDomainMarker.cs`
+- **Thin community `Community 29`** (2 nodes): `AuthApplicationMarker`, `AuthApplicationMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (2 nodes): `AuthInfrastructureMarker`, `AuthInfrastructureMarker.cs`
+- **Thin community `Community 30`** (2 nodes): `AuthDomainMarker`, `AuthDomainMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `IssuerApplicationMarker`, `IssuerApplicationMarker.cs`
+- **Thin community `Community 31`** (2 nodes): `AuthInfrastructureMarker`, `AuthInfrastructureMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `IssuerDomainMarker`, `IssuerDomainMarker.cs`
+- **Thin community `Community 32`** (2 nodes): `IssuerApplicationMarker`, `IssuerApplicationMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `IssuerInfrastructureMarker`, `IssuerInfrastructureMarker.cs`
+- **Thin community `Community 33`** (2 nodes): `IssuerDomainMarker`, `IssuerDomainMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `VerifierApplicationMarker`, `VerifierApplicationMarker.cs`
+- **Thin community `Community 34`** (2 nodes): `IssuerInfrastructureMarker`, `IssuerInfrastructureMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `VerifierDomainMarker`, `VerifierDomainMarker.cs`
+- **Thin community `Community 35`** (2 nodes): `VerifierApplicationMarker`, `VerifierApplicationMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `VerifierInfrastructureMarker`, `VerifierInfrastructureMarker.cs`
+- **Thin community `Community 36`** (2 nodes): `VerifierDomainMarker`, `VerifierDomainMarker.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (2 nodes): `KernelInfrastructureMarker`, `KernelInfrastructureMarker.cs`
+- **Thin community `Community 37`** (2 nodes): `VerifierInfrastructureMarker`, `VerifierInfrastructureMarker.cs`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 38`** (2 nodes): `KernelInfrastructureMarker`, `KernelInfrastructureMarker.cs`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 39`** (2 nodes): `TituloGraduacionVcDocumentErrorCodes`, `TituloGraduacionVcDocumentErrorCodes.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 40`** (2 nodes): `VcSliceAEip712Constants`, `VcSliceAEip712Constants.cs`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -301,17 +303,17 @@ Nodes (1): VerifiablePresentation712
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Create()` connect `Community 0` to `Community 1`, `Community 2`, `Community 4`, `Community 7`?**
-  _High betweenness centrality (0.117) - this node is a cross-community bridge._
+- **Why does `Create()` connect `Community 1` to `Community 3`, `Community 4`, `Community 8`, `Community 10`, `Community 11`?**
+  _High betweenness centrality (0.120) - this node is a cross-community bridge._
 - **Are the 28 inferred relationships involving `Create()` (e.g. with `.HandleAsync()` and `.NewAsync()`) actually correct?**
   _`Create()` has 28 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 7 inferred relationships involving `Generate()` (e.g. with `.Generate_Address_Is0xPlus40Hex()` and `.FromPrivateKey_IsDeterministic()`) actually correct?**
-  _`Generate()` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Program`, `AuthApplicationMarker`, `AuthDomainMarker` to the rest of the system?**
-  _16 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.1 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06 - nodes in this community are weakly interconnected._
+- **Should `Community 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._

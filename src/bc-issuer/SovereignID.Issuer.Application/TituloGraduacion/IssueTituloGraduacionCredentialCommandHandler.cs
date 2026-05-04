@@ -1,7 +1,9 @@
 using System.Globalization;
+using System.Text.Json;
 using SovereignID.Issuer.Domain.TituloGraduacion;
 using SovereignID.SharedKernel.Application;
 using SovereignID.SharedKernel.Domain;
+using SovereignID.VcSliceA.Document;
 
 namespace SovereignID.Issuer.Application.TituloGraduacion;
 
@@ -41,11 +43,6 @@ public sealed class IssueTituloGraduacionCredentialCommandHandler
         }
 
         var claims = new TituloGraduacionClaims(input.DegreeTitle, input.ProgramName, input.AwardDate);
-        var claimError = TituloGraduacionClaimsValidator.Validate(claims);
-        if (claimError is not null)
-        {
-            return new IssueTituloGraduacionCredentialResult(false, null, claimError);
-        }
 
         var now = await clock.GetUtcNowAsync(cancellationToken).ConfigureAwait(false);
         var issuance = now.UtcDateTime;
@@ -67,6 +64,18 @@ public sealed class IssueTituloGraduacionCredentialCommandHandler
             claims,
             issuanceString,
             expirationString);
+
+        using (var vcDoc = JsonDocument.Parse(VerifiableCredentialJsonBuilder.Serialize(unsigned)))
+        {
+            var shapeError = TituloGraduacionVcDocumentValidator.Validate(
+                vcDoc.RootElement,
+                now,
+                CredentialValidationMode.Unsigned);
+            if (shapeError is not null)
+            {
+                return new IssueTituloGraduacionCredentialResult(false, null, IssuerTituloGraduacionDocumentErrorMapper.Map(shapeError));
+            }
+        }
 
         var signRequest = new IssuerVcIntegritySignRequest(
             credentialId,

@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Options;
-using SovereignID.Auth.Domain;
 using SovereignID.Auth.Infrastructure.Configuration;
 using SovereignID.Auth.Infrastructure.Jwt;
 using SovereignID.SharedKernel.Domain;

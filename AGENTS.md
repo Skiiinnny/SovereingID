@@ -71,6 +71,7 @@ None — no product-phase OpenSpec change is active. In-flight repo work (exampl
 Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`. 
 Phase 2 — SIWE authentication → `openspec/changes/archive/2026-05-03-phase-2-siwe-auth/`. 
 Phase 3 VC — slice A (dominio + EIP-712, sin cadena/IPFS) → `openspec/changes/archive/2026-05-03-phase-3-vc-slice-a/`. 
+VC slice A — conformidad de documento (`SovereignID.VcSliceA.Document`) → `openspec/changes/archive/2026-05-03-vc-slice-a-document-conformance/`.
 SonarQube debt (Fase 2 alignment) → `openspec/changes/archive/2026-05-03-sonar-debt-phase-2/`.
 
 When the current change is complete and moved to `openspec/changes/archive/`, update the **Current change** path above to the next active folder.

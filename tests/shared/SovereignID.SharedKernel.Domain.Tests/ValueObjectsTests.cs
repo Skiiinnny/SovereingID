@@ -1,5 +1,3 @@
-using SovereignID.SharedKernel.Domain;
-
 namespace SovereignID.SharedKernel.Domain.Tests;
 
 public class ValueObjectsTests

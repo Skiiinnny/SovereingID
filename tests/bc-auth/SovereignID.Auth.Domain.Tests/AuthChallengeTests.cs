@@ -1,4 +1,3 @@
-using SovereignID.Auth.Domain;
 using SovereignID.Auth.Domain.Ports;
 using SovereignID.SharedKernel.Domain;
 

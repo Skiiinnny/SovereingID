@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using SovereignID.VcSliceA.Document;
 
 namespace SovereignID.Issuer.Domain.TituloGraduacion;
 
@@ -8,11 +9,8 @@ namespace SovereignID.Issuer.Domain.TituloGraduacion;
 /// </summary>
 public static class VerifiableCredentialJsonBuilder
 {
-    private const string W3CContext = "https://www.w3.org/2018/credentials/v1";
-    private const string VocabBase = "https://sovereignid.local/vocab/titulo-graduacion/v1#";
-
-    /// <summary>Debe coincidir con <c>SovereignID.VcSliceA.Eip712.VcSliceAEip712Constants.ProofType</c>.</summary>
-    public const string ProofType = "SovereignIDEip712Signature2026";
+    /// <summary>Delegado en <see cref="TituloGraduacionVcDocumentConstants"/> (paridad con EIP-712).</summary>
+    public const string ProofType = TituloGraduacionVcDocumentConstants.ProofType;
 
     /// <summary>
     /// Crea el objeto JSON del VC sin la prueba criptográfica.
@@ -38,15 +36,9 @@ public static class VerifiableCredentialJsonBuilder
             ["awardDate"] = claims.AwardDate,
         };
 
-        var secondContext = new JsonObject
-        {
-            ["TituloGraduacionCredential"] = VocabBase + "TituloGraduacionCredential",
-            ["degreeTitle"] = VocabBase + "degreeTitle",
-            ["programName"] = VocabBase + "programName",
-            ["awardDate"] = VocabBase + "awardDate",
-        };
+        var secondContext = TituloGraduacionVcDocumentConstants.CreateSecondContextObject();
 
-        var context = new JsonArray(W3CContext, secondContext);
+        var context = new JsonArray(TituloGraduacionVcDocumentConstants.W3CVerifiableCredentialsContextV1, secondContext);
 
         var types = new JsonArray("VerifiableCredential", "TituloGraduacionCredential");
 
