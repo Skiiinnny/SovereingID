@@ -8,18 +8,11 @@ using SovereignID.Crypto;
 
 namespace SovereignID.Auth.IntegrationTests;
 
-public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
+public sealed class AuthEndpointsTests(AuthApiFactory factory) : IClassFixture<AuthApiFactory>
 {
-    private readonly HttpClient _client;
-    private readonly AuthApiFactory _factory;
+    private readonly HttpClient _client = factory.CreateClient();
     private readonly KeyPair _signer = KeyPair.Generate();
     private readonly MessageSigner _signerUtility = new();
-
-    public AuthEndpointsTests(AuthApiFactory factory)
-    {
-        _factory = factory;
-        _client = factory.CreateClient();
-    }
 
     [Fact]
     public async Task HappyPath_ReturnsJwtAndAddress()
@@ -62,7 +55,7 @@ public sealed class AuthEndpointsTests : IClassFixture<AuthApiFactory>
     public async Task ExpiredNonce_ReturnsNonceExpired()
     {
         var nonce = await GetNonceAsync();
-        _factory.Clock.Advance(TimeSpan.FromMinutes(11));
+        factory.Clock.Advance(TimeSpan.FromMinutes(11));
 
         var address = _signer.Address;
         var message = BuildMessage(address, nonce, chainId: 11155111, includeVersion: true);

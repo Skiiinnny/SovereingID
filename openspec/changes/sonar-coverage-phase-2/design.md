@@ -57,8 +57,10 @@ reglas.
 
 - Que Sonar publique una métrica de cobertura real (≠ 0) en el próximo
   análisis publicado tras aplicar este change.
-- Cumplir el gate `SovereignID default` (custom): `new_coverage ≥ 80 %`
-  y `coverage ≥ 70 %` a nivel proyecto.
+- Cumplir el gate **`Sonar way`** en SonarCloud (`new_coverage` en código
+  nuevo según la UI del producto) y **`coverage ≥ 70 %` por bounded
+  context** vía CI (Coverlet + `Check-BcCoverage.ps1`), no como condición
+  extra de gate en Sonar en plan Free.
 - Garantizar que **cada** bounded context no-legacy
   (`shared`, `bc-auth`, `bc-issuer`, `bc-verifier`) quede ≥ 70 % line
   coverage mediante verificación en CI (no sólo el promedio
@@ -90,27 +92,29 @@ reglas.
 
 ## Decisions
 
-### 1. Gate propio `SovereignID default` — proyecto-wide + per-BC
+### 1. Gate SonarCloud (`Sonar way`) + per-BC solo en CI
 
-**Decisión:** Crear un Quality Gate custom en SonarCloud llamado
-`SovereignID default`, clonado de `Sonar way`, con **una condición
-adicional** sobre coverage overall (`coverage ≥ 70 %`) además de la
-existente `new_coverage ≥ 80 %`. El gate se asigna al proyecto
-`Skiiinnny_SovereingID`.
+**Decisión (actualizada):** En SonarCloud **Free** no se pueden crear ni
+clonar Quality Gates personalizados. El proyecto **`Skiiinnny_SovereingID`**
+usa el gate built-in **`Sonar way`**, que ya incluye condiciones sobre
+**código nuevo** (p. ej. cobertura ≥ 80 % en new code, más ratings y
+duplicación según la plantilla). No hay gate `SovereignID default` en
+este plan.
 
-Sobre el **enforcement por bounded context** (el 70 % "por BC" que
-pidió el producto): Sonar no permite condiciones por directorio en un
-gate. Se implementa **fuera de Sonar** con un paso de CI que parsea
-el reporte Cobertura consolidado y falla si algún BC queda bajo
-70 %. Este paso vive en `ci.yml` **antes** de publicar el artifact
-para Sonar, de modo que si un BC falla, el pipeline corta y Sonar
-ni siquiera se ejecuta.
+El piso **`coverage ≥ 70 %` por bounded context** y la política de
+legacy siguen siendo obligatorios, pero **solo en CI**: Sonar no permite
+condiciones por directorio en un gate, y el plan Free no añade un
+“overall ≥ 70 %” en el servidor. El paso `ci/Check-BcCoverage.ps1` parsea
+Cobertura y falla si algún BC queda bajo 70 %; vive en `ci.yml` **antes**
+del upload del artifact para Sonar.
 
 **Alternativas descartadas:**
 
-- *Sólo gate proyecto-wide (70 % overall)*: no detecta un BC rezagado
-  cuando otro compensa. Inaceptable dada la arquitectura por BCs
-  independientes que va a crecer con `issuer` y `verifier`.
+- *Gate custom `SovereignID default` con overall ≥ 70 %*: descartada
+  en la práctica por **límite de plan Free**; el umbral overall se
+  delega a CI.
+- *Sólo gate Sonar sin check per-BC*: no detecta un BC rezagado cuando
+  otro compensa. Inaceptable; por eso se mantiene el script en CI.
 - *Proyectos Sonar separados por BC*: fragmenta historial, dificulta
   la vista global, y SonarCloud cobra por proyecto en algunos tiers.
   Overkill para un monorepo con convención clara.
@@ -413,9 +417,9 @@ Bajo esta definición:
 
 ## Migration Plan
 
-1. **Crear el gate en SonarCloud** (manual, UI o API): duplicar
-   `Sonar way` → `SovereignID default` → añadir `coverage ≥ 70 %` →
-   asignar al proyecto `Skiiinnny_SovereingID`. Screenshot en PR.
+1. **Verificar gate en SonarCloud** (manual, UI): confirmar que el
+   proyecto usa **`Sonar way`** y entender la condición de cobertura en
+   **new code**. Screenshot opcional en PR (plan Free sin gates custom).
 2. **Introducir `coverlet.runsettings` + `Directory.Build.props`**:
    PR separable aunque se mergee en el mismo branch. Verificar
    `dotnet test --settings coverlet.runsettings` local antes de
@@ -433,7 +437,7 @@ Bajo esta definición:
 7. **Empujar el PR**. Verificar en el run:
    - `ci.yml` verde, per-BC check mostrando cobertura real.
    - `sonarqube.yml` verde, coverage reportada ≠ 0.
-   - Quality Gate `SovereignID default` aplicado y pasado.
+   - Quality Gate **`Sonar way`** aplicado y pasado.
 8. **Rollback**: si cualquier paso rompe PRs open, revertir el
    commit que tocó workflows (`ci.yml`, `sonarqube.yml`,
    `dotnet.yml`) deja el estado previo operativo en < 5 min.

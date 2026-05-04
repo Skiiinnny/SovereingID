@@ -4,22 +4,12 @@ using SovereignID.SharedKernel.Domain;
 
 namespace SovereignID.Auth.Infrastructure.Repositories;
 
-public sealed class AuthChallengeEvictionHostedService : BackgroundService
+public sealed class AuthChallengeEvictionHostedService(
+    InMemoryAuthChallengeRepository repository,
+    IClock clock,
+    ILogger<AuthChallengeEvictionHostedService> logger)
+    : BackgroundService
 {
-    private readonly InMemoryAuthChallengeRepository repository;
-    private readonly IClock clock;
-    private readonly ILogger<AuthChallengeEvictionHostedService> logger;
-
-    public AuthChallengeEvictionHostedService(
-        InMemoryAuthChallengeRepository repository,
-        IClock clock,
-        ILogger<AuthChallengeEvictionHostedService> logger)
-    {
-        this.repository = repository;
-        this.clock = clock;
-        this.logger = logger;
-    }
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));

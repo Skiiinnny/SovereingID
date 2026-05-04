@@ -55,17 +55,13 @@ public class GenerateNonceQueryHandlerTests
             => Task.CompletedTask;
     }
 
-    private sealed class FakeNonceGenerator : INonceGenerator
+    private sealed class FakeNonceGenerator(DomainNonce nonce) : INonceGenerator
     {
-        private readonly DomainNonce nonce;
-        public FakeNonceGenerator(DomainNonce nonce) => this.nonce = nonce;
         public Task<DomainNonce> NewAsync(CancellationToken cancellationToken) => Task.FromResult(nonce);
     }
 
-    private sealed class FakeClock : IClock
+    private sealed class FakeClock(DateTimeOffset now) : IClock
     {
-        private readonly DateTimeOffset now;
-        public FakeClock(DateTimeOffset now) => this.now = now;
         public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken) => Task.FromResult(now);
     }
 }

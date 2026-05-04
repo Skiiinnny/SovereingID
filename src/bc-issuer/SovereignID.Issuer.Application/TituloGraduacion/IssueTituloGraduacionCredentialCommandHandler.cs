@@ -10,23 +10,12 @@ namespace SovereignID.Issuer.Application.TituloGraduacion;
 /// <summary>
 /// Valida entrada, construye el VC y delega la firma EIP-712 en <see cref="IIssuerVcIntegritySigner"/>.
 /// </summary>
-public sealed class IssueTituloGraduacionCredentialCommandHandler
+public sealed class IssueTituloGraduacionCredentialCommandHandler(
+    IIssuerVcIntegritySigner signer,
+    IClock clock,
+    IGuidGenerator guidGenerator)
     : ICommandHandler<IssueTituloGraduacionCredentialCommand, IssueTituloGraduacionCredentialResult>
 {
-    private readonly IIssuerVcIntegritySigner signer;
-    private readonly IClock clock;
-    private readonly IGuidGenerator guidGenerator;
-
-    public IssueTituloGraduacionCredentialCommandHandler(
-        IIssuerVcIntegritySigner signer,
-        IClock clock,
-        IGuidGenerator guidGenerator)
-    {
-        this.signer = signer;
-        this.clock = clock;
-        this.guidGenerator = guidGenerator;
-    }
-
     /// <inheritdoc />
     public async Task<IssueTituloGraduacionCredentialResult> HandleAsync(
         IssueTituloGraduacionCredentialCommand input,

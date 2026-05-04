@@ -13,7 +13,7 @@ public static partial class TituloGraduacionVcDocumentValidator
     private static readonly HashSet<string> AllowedSubjectPropertyNames =
         new(StringComparer.Ordinal) { "id", "degreeTitle", "programName", "awardDate" };
 
-    [GeneratedRegex(@"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", RegexOptions.CultureInvariant)]
+    [GeneratedRegex("^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", RegexOptions.CultureInvariant)]
     private static partial Regex UrnUuidLowerRegex();
 
     [GeneratedRegex(@"^\d{4}-\d{2}-\d{2}$", RegexOptions.CultureInvariant)]

@@ -11,7 +11,7 @@
 ## 3. Módulo cadena VC embebido + VP crypto
 
 - [x] 3.1 Extraer lógica de `VerifyEmbeddedVc` y posteriores firmas VP a un módulo `internal` que implemente el orden: documento VC → enlaces holder → VC EIP-712 → `proof` VP → VP EIP-712.
-- [ ] 3.2 Usar el helper de 1.x para pruebas VC y VP; mantener mapeo de errores de documento con `VerifierTituloGraduacionVcDocumentErrorMapper`.
+- [x] 3.2 Usar el helper de 1.x para pruebas VC y VP; mantener mapeo de errores de documento con `VerifierTituloGraduacionVcDocumentErrorMapper`.
 
 ## 4. Fachada y limpieza
 

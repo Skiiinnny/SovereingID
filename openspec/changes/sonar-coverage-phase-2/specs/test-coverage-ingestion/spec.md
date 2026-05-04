@@ -100,7 +100,7 @@ Layer 3 — SonarQube scanner properties passed at `scanner begin`:
 - **AND** those files do not appear with non-zero
   `linesToCover` in the coverage report produced by Coverlet
 
-### Requirement: SonarCloud consumes OpenCover reports and enforces a custom Quality Gate
+### Requirement: SonarCloud consumes OpenCover reports and enforces `Sonar way`
 
 The `SovereignID` SonarCloud project (`Skiiinnny_SovereingID`) SHALL be analyzed with a scanner configuration that:
 
@@ -111,17 +111,16 @@ The `SovereignID` SonarCloud project (`Skiiinnny_SovereingID`) SHALL be analyzed
   `sonar.qualitygate.wait=true`, blocking the pull-request check
   if the gate fails.
 
-A custom Quality Gate named `SovereignID default` SHALL be
-maintained in SonarCloud, cloned from `Sonar way`, with the
-following conditions in addition to all `Sonar way` defaults
-(ratings A, new duplications ≤ 3 %, new hotspots reviewed
-100 %):
+On SonarCloud **Free**, custom quality gates (clone/edit) are not
+available. The project SHALL use the built-in **`Sonar way`** quality
+gate (or the organization default that resolves to it), including its
+**new code** conditions (e.g. new-code coverage threshold as shown in
+the SonarCloud UI).
 
-- `new_coverage` ≥ 80 % (inherited; kept explicit).
-- `coverage` ≥ 70 % on overall project code.
-
-The `SovereignID default` gate SHALL be assigned to the
-`Skiiinnny_SovereingID` project.
+The **≥ 70 % line coverage per bounded context** requirement SHALL NOT
+be asserted by SonarCloud quality gate conditions on Free; it SHALL
+remain enforced in CI via the Cobertura-based script described in the
+*Per-bounded-context coverage floor* requirement.
 
 #### Scenario: Sonar reports non-zero coverage after this change is applied
 
@@ -134,8 +133,9 @@ The `SovereignID default` gate SHALL be assigned to the
 
 #### Scenario: A failing Quality Gate blocks the pull request
 
-- **WHEN** a pull request introduces code that drops
-  `new_coverage` below 80 % or `coverage` below 70 %
+- **WHEN** a pull request introduces code that violates a
+  **`Sonar way`** condition enforced for the analysis (for example
+  insufficient **new code** coverage)
 - **THEN** the Sonar workflow job finishes with a non-zero exit
   code
 - **AND** the GitHub required check `SonarQube / Build and
@@ -143,17 +143,18 @@ The `SovereignID default` gate SHALL be assigned to the
 - **AND** the Sonar project page attributes the failure to the
   specific failing condition
 
-#### Scenario: The `SovereignID default` gate is the one applied
+#### Scenario: The applied gate is `Sonar way` (Free plan)
 
 - **WHEN** an inspector opens the `Skiiinnny_SovereingID` project
-  settings in SonarCloud
-- **THEN** the assigned Quality Gate is `SovereignID default`
-- **AND** the gate's condition list contains both
-  `new_coverage` ≥ 80 % and `coverage` ≥ 70 %
+  settings in SonarCloud on a Free-plan organization
+- **THEN** the assigned Quality Gate is **`Sonar way`** (built-in /
+  default), not a custom cloned gate
+- **AND** per-BC 70 % enforcement is documented as a CI concern, not
+  as an additional Sonar gate condition
 
 ### Requirement: Per-bounded-context coverage floor is enforced in CI
 
-Each non-legacy bounded context (`bc-auth`, `bc-issuer`, `bc-verifier`, and the `shared` kernel) SHALL maintain a line coverage of at least 70 %, measured from the Cobertura report produced in CI, independent of the project-wide average enforced by SonarCloud.
+Each non-legacy bounded context (`bc-auth`, `bc-issuer`, `bc-verifier`, and the `shared` kernel) SHALL maintain a line coverage of at least 70 %, measured from the Cobertura report produced in CI, independent of the project-wide or new-code metrics shown in SonarCloud (`Sonar way` on Free does not replace this per-BC check).
 
 The enforcement SHALL happen in the CI pipeline via a PowerShell
 script at `ci/Check-BcCoverage.ps1`, invoked by the `ci.yml`

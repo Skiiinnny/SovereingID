@@ -43,7 +43,7 @@ Full architecture: [openspec/specs/architecture.md](openspec/specs/architecture.
 |-------|-------------|--------|
 | 1 | Crypto primitives (keys, signing, notarization) | ✅ Demo + tests |
 | 2 | SIWE authentication (login without password) | ✅ Demo + tests |
-| 3 | W3C Verifiable Credentials (issue + verify) | ⏳ Pending |
+| 3 | W3C Verifiable Credentials (issue + verify, slice A: documento + EIP-712, sin anclaje on-chain/IPFS) | ✅ Libraries + tests |
 | 4 | KYC portable use case + revocation | ⏳ Pending |
 | 5 | Deployment + portfolio | ⏳ Pending |
 

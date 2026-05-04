@@ -17,14 +17,16 @@ en cuanto haya un PR de negocio real. Además, los tres workflows
 solución hasta 3 veces por PR sin compartir resultados. Antes de
 continuar con `bc-issuer`/`bc-verifier` conviene fijar la tubería de
 cobertura, la política de exclusión (legacy, markers, hosting trivial) y
-un Quality Gate alineado con la arquitectura por bounded context.
+política de cobertura alineada con la arquitectura por bounded context.
 
 ## What Changes
 
-- **Quality Gate propio** `SovereignID default` (clonado de `Sonar way`)
-  con condiciones: `new_coverage ≥ 80 %`, `coverage ≥ 70 %` overall, más
-  las heredadas de `Sonar way` (ratings A, duplicación ≤ 3 %, hotspots
-  revisados 100 %). Se asigna al proyecto `Skiiinnny_SovereingID`.
+- **Quality Gate en SonarCloud:** en plan **Free** no hay gates
+  personalizados; el proyecto permanece en **`Sonar way`** (built-in),
+  que ya exige cobertura suficiente en **código nuevo** (p. ej. ≥ 80 %).
+  El objetivo **`coverage ≥ 70 %` overall** del diseño original se
+  cumple con **CI** (`Check-BcCoverage.ps1` por BC + Coverlet), no como
+  condición adicional en Sonar.
 - **Enforcement por BC** (lectura estricta del 70 %): un paso de CI
   procesa el reporte Cobertura y falla el job si **cualquier** bounded
   context (`bc-auth`, `bc-issuer`, `bc-verifier`, `shared`) queda por
@@ -72,7 +74,8 @@ un Quality Gate alineado con la arquitectura por bounded context.
 - `test-coverage-ingestion`: Requisitos de producto-ingeniería para que
   las pruebas automatizadas de SovereignID alimenten métricas de
   cobertura reales a SonarCloud, con exclusiones documentadas,
-  enforcement por bounded context y un Quality Gate propio. Cubre la
+  enforcement por bounded context y el uso del gate **`Sonar way`**
+  en SonarCloud Free. Cubre la
   generación de reportes duales (OpenCover + Cobertura), la política de
   exclusión de legacy/wwwroot/hosting, la consolidación de los
   workflows CI/Sonar y el criterio explícito `Integration = red/I/O
@@ -97,10 +100,9 @@ un Quality Gate alineado con la arquitectura por bounded context.
 - **Raíz del repo**: nuevo `coverlet.runsettings`.
 - **CI/CD**: `ci.yml` reescrito, `sonarqube.yml` reescrito,
   `dotnet.yml` eliminado.
-- **SonarCloud**: nuevo Quality Gate `SovereignID default` asignado al
-  proyecto. La asignación y creación del gate es **manual vía UI de
-  SonarCloud** (o API); se documenta en `design.md` y `tasks.md` pero
-  no se automatiza en este change.
+- **SonarCloud**: verificación de que el proyecto usa el gate built-in
+  **`Sonar way`** (plan Free; sin gate custom). Se documenta en
+  `design.md`, `tasks.md` y `docs/onboarding.md`.
 - **Documentación**: `README.md` añade sección "Run tests with
   coverage" y aclara la convención de `[Trait("Category","Integration")]`.
 - **Out of scope**: tests nuevos para cubrir gaps reales sólo si el
