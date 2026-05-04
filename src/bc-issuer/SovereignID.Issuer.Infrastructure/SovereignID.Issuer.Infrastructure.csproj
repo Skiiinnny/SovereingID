@@ -10,6 +10,7 @@
     <ProjectReference Include="..\SovereignID.Issuer.Domain\SovereignID.Issuer.Domain.csproj" />
     <ProjectReference Include="..\SovereignID.Issuer.Application\SovereignID.Issuer.Application.csproj" />
     <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Infrastructure\SovereignID.SharedKernel.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.VcSliceA.Eip712\SovereignID.VcSliceA.Eip712.csproj" />
   </ItemGroup>
 
 </Project>
