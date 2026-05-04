@@ -1,5 +1,3 @@
-using SovereignID.Auth.Domain;
-
 namespace SovereignID.Auth.Domain.Tests;
 
 public class ChainIdTests

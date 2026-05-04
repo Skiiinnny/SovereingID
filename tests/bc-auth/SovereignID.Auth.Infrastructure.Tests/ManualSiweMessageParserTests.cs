@@ -1,4 +1,3 @@
-using SovereignID.Auth.Domain;
 using SovereignID.Auth.Infrastructure.Siwe;
 
 namespace SovereignID.Auth.Infrastructure.Tests;

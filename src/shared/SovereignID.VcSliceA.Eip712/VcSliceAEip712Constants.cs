@@ -1,3 +1,5 @@
+using SovereignID.VcSliceA.Document;
+
 namespace SovereignID.VcSliceA.Eip712;
 
 /// <summary>
@@ -6,7 +8,7 @@ namespace SovereignID.VcSliceA.Eip712;
 public static class VcSliceAEip712Constants
 {
     /// <summary>Tipo de prueba declarado en el documento JSON-LD (extensión de producto).</summary>
-    public const string ProofType = "SovereignIDEip712Signature2026";
+    public const string ProofType = TituloGraduacionVcDocumentConstants.ProofType;
 
     public const string VcDomainName = "SovereignID VC";
     public const string VcDomainVersion = "1";

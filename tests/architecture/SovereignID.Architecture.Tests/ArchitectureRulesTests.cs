@@ -31,7 +31,6 @@ public sealed class ArchitectureRulesTests
 
     [Theory]
     [InlineData("SovereignID.Auth.Domain")]
-    [InlineData("SovereignID.Issuer.Domain")]
     [InlineData("SovereignID.Verifier.Domain")]
     public void BC_Domain_Only_References_SharedKernel_Domain(string assemblyName)
     {
@@ -41,6 +40,21 @@ public sealed class ArchitectureRulesTests
         };
 
         AssertOnlyAllowedProjectReferences(assemblyName, "BC domain only references SharedKernel.Domain", allowed);
+    }
+
+    [Fact]
+    public void Issuer_Domain_References_SharedKernel_And_VcSliceA_Document()
+    {
+        var allowed = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "SovereignID.SharedKernel.Domain",
+            "SovereignID.VcSliceA.Document",
+        };
+
+        AssertOnlyAllowedProjectReferences(
+            "SovereignID.Issuer.Domain",
+            "Issuer.Domain references SharedKernel.Domain and VcSliceA.Document only",
+            allowed);
     }
 
     [Fact]

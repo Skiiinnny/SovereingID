@@ -1,5 +1,3 @@
-using SovereignID.Crypto;
-
 namespace SovereignID.Crypto.Tests;
 
 public class KeyPairTests

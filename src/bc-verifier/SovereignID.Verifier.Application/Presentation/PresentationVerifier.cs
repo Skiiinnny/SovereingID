@@ -1,6 +1,6 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using SovereignID.SharedKernel.Domain;
+using SovereignID.VcSliceA.Document;
 using SovereignID.VcSliceA.Eip712;
 
 namespace SovereignID.Verifier.Application.Presentation;
@@ -8,13 +8,8 @@ namespace SovereignID.Verifier.Application.Presentation;
 /// <summary>
 /// Valida forma VP/VC, ventana temporal y firmas EIP-712 del emisor y del titular.
 /// </summary>
-public static partial class PresentationVerifier
+public static class PresentationVerifier
 {
-    private const string W3CContext = "https://www.w3.org/2018/credentials/v1";
-
-    [GeneratedRegex(@"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", RegexOptions.CultureInvariant)]
-    private static partial Regex UrnUuidLowerRegex();
-
     /// <summary>
     /// Verifica la presentación JSON frente al reloj inyectado (UTC).
     /// </summary>
@@ -132,109 +127,19 @@ public static partial class PresentationVerifier
         string holderDid,
         EthereumAddress holderAddr)
     {
-        if (!vc.TryGetProperty("@context", out var ctx) || ctx.ValueKind != JsonValueKind.Array)
+        var docErr = TituloGraduacionVcDocumentValidator.Validate(vc, nowUtc, CredentialValidationMode.Signed);
+        if (docErr is not null)
         {
-            return new PresentationVerificationOutcome(false, "vc_context_missing");
+            return new PresentationVerificationOutcome(false, VerifierTituloGraduacionVcDocumentErrorMapper.Map(docErr));
         }
 
-        var ctxItems = ctx.EnumerateArray().ToArray();
-        if (ctxItems.Length < 2 ||
-            ctxItems[0].ValueKind != JsonValueKind.String ||
-            ctxItems[0].GetString() != W3CContext ||
-            ctxItems[1].ValueKind != JsonValueKind.Object)
-        {
-            return new PresentationVerificationOutcome(false, "vc_context_shape");
-        }
-
-        if (!vc.TryGetProperty("type", out var typeEl) || typeEl.ValueKind != JsonValueKind.Array)
-        {
-            return new PresentationVerificationOutcome(false, "vc_type_missing");
-        }
-
-        var typeSet = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var el in typeEl.EnumerateArray())
-        {
-            if (el.ValueKind != JsonValueKind.String)
-            {
-                return new PresentationVerificationOutcome(false, "vc_type_invalid");
-            }
-
-            typeSet.Add(el.GetString()!);
-        }
-
-        if (typeSet.Count != 2 ||
-            !typeSet.Contains("VerifiableCredential") ||
-            !typeSet.Contains("TituloGraduacionCredential"))
-        {
-            return new PresentationVerificationOutcome(false, "vc_type_invalid");
-        }
-
-        if (!vc.TryGetProperty("id", out var idEl) || idEl.ValueKind != JsonValueKind.String)
-        {
-            return new PresentationVerificationOutcome(false, "vc_id_missing");
-        }
-
-        var id = idEl.GetString()!;
-        if (!UrnUuidLowerRegex().IsMatch(id))
-        {
-            return new PresentationVerificationOutcome(false, "vc_id_format");
-        }
-
-        if (!vc.TryGetProperty("issuer", out var issuerEl) || issuerEl.ValueKind != JsonValueKind.String)
-        {
-            return new PresentationVerificationOutcome(false, "vc_issuer_missing");
-        }
-
-        var issuerDid = issuerEl.GetString()!;
-        if (!EthrSepoliaDidParser.TryParse(issuerDid, out _, out var issuerAddr))
-        {
-            return new PresentationVerificationOutcome(false, "vc_issuer_did_invalid");
-        }
-
-        if (!vc.TryGetProperty("issuanceDate", out var issEl) || issEl.ValueKind != JsonValueKind.String)
-        {
-            return new PresentationVerificationOutcome(false, "vc_issuanceDate_missing");
-        }
-
-        if (!TryParseRfc3339Utc(issEl.GetString()!, out var issuanceDto))
-        {
-            return new PresentationVerificationOutcome(false, "vc_issuanceDate_format");
-        }
-
-        if (issuanceDto > nowUtc)
-        {
-            return new PresentationVerificationOutcome(false, "vc_issuanceDate_future");
-        }
-
-        if (vc.TryGetProperty("expirationDate", out var expEl) && expEl.ValueKind == JsonValueKind.String)
-        {
-            if (!TryParseRfc3339Utc(expEl.GetString()!, out var expDto))
-            {
-                return new PresentationVerificationOutcome(false, "vc_expirationDate_format");
-            }
-
-            if (expDto < nowUtc)
-            {
-                return new PresentationVerificationOutcome(false, "vc_expirationDate_expired");
-            }
-        }
-
-        if (!vc.TryGetProperty("credentialSubject", out var subj))
-        {
-            return new PresentationVerificationOutcome(false, "vc_subject_missing");
-        }
-
-        var subErr = EmbeddedTituloGraduacionSubjectValidator.ValidateSubject(subj);
-        if (subErr is not null)
-        {
-            return new PresentationVerificationOutcome(false, subErr);
-        }
-
+        var id = vc.GetProperty("id").GetString()!;
+        var issuerDid = vc.GetProperty("issuer").GetString()!;
+        _ = EthrSepoliaDidParser.TryParse(issuerDid, out _, out var issuerAddr);
+        var issEl = vc.GetProperty("issuanceDate");
+        var subj = vc.GetProperty("credentialSubject");
         var subjectId = subj.GetProperty("id").GetString()!;
-        if (!EthrSepoliaDidParser.TryParse(subjectId, out _, out var subjectAddr))
-        {
-            return new PresentationVerificationOutcome(false, "vc_subject_did_invalid");
-        }
+        _ = EthrSepoliaDidParser.TryParse(subjectId, out _, out var subjectAddr);
 
         if (!string.Equals(holderDid, subjectId, StringComparison.Ordinal))
         {
@@ -246,11 +151,7 @@ public static partial class PresentationVerifier
             return new PresentationVerificationOutcome(false, "vp_holder_address_mismatch");
         }
 
-        if (!vc.TryGetProperty("proof", out var vcProof) || vcProof.ValueKind != JsonValueKind.Object)
-        {
-            return new PresentationVerificationOutcome(false, "vc_proof_missing");
-        }
-
+        var vcProof = vc.GetProperty("proof");
         if (!TryGetProofSignature(vcProof, out var vcSig, out var vcProofErr))
         {
             return new PresentationVerificationOutcome(false, vcProofErr);
@@ -312,21 +213,5 @@ public static partial class PresentationVerifier
         }
 
         return true;
-    }
-
-    private static bool TryParseRfc3339Utc(string value, out DateTimeOffset dto)
-    {
-        if (DateTimeOffset.TryParse(
-                value,
-                System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.AssumeUniversal |
-                System.Globalization.DateTimeStyles.AdjustToUniversal,
-                out dto))
-        {
-            return true;
-        }
-
-        dto = default;
-        return false;
     }
 }

@@ -1,6 +1,3 @@
-using SovereignID.Chain;
-using Xunit;
-
 namespace SovereignID.Chain.Tests;
 
 public class SepoliaClientIntegrationTests

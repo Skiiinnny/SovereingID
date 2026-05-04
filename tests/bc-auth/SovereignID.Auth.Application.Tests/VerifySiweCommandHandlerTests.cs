@@ -129,7 +129,7 @@ public class VerifySiweCommandHandlerTests
                 ExpirationTime: null,
                 NotBefore: null,
                 RequestId: null,
-                Resources: Array.Empty<Uri>(),
+                Resources: [],
                 OriginalPayload: "payload"));
             var repository = new FakeRepository(challenge);
             var clock = new FakeClock(issuedAt.AddMinutes(1));
