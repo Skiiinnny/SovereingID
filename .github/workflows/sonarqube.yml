@@ -22,7 +22,8 @@ jobs:
         with:
           java-version: 17
           distribution: "zulu"
-      # Ref sin head_sha: merge del PR (misma línea que suele usar CI en pull_request) o rama del push; fork excluido en if del job (S7631).
+      # Aquí: clon explícito del repo base (no el fork) con historial completo para SonarScanner.
+      # `uses` = actions/checkout@v4 pinneado por SHA. `ref` = merge del PR (como CI en pull_request) o rama del push; forks excluidos por el `if` del job (S7631).
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: ${{ github.repository }}

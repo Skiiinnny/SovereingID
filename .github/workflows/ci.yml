@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Aquí: clon del árbol que dispara el workflow (push a la rama o merge de PR en pull_request).
+      # `uses` fijado al SHA del tag v4 de actions/checkout (reproducible / supply chain).
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
