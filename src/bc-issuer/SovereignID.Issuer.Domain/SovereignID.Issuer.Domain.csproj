@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
+    <ProjectReference Include="..\..\shared\SovereignID.VcSliceA.Document\SovereignID.VcSliceA.Document.csproj" />
   </ItemGroup>
 
 </Project>

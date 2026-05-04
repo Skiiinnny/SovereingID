@@ -1,5 +1,6 @@
 using System.Text.Json;
 using SovereignID.Issuer.Domain.TituloGraduacion;
+using SovereignID.VcSliceA.Document;
 
 namespace SovereignID.Issuer.Domain.Tests;
 
@@ -20,7 +21,7 @@ public class VerifiableCredentialJsonBuilderTests
         using var doc = JsonDocument.Parse(root.ToJsonString());
         var el = doc.RootElement;
         Assert.Equal(JsonValueKind.Array, el.GetProperty("@context").ValueKind);
-        Assert.Equal("https://www.w3.org/2018/credentials/v1", el.GetProperty("@context")[0].GetString());
+        Assert.Equal(TituloGraduacionVcDocumentConstants.W3CVerifiableCredentialsContextV1, el.GetProperty("@context")[0].GetString());
         Assert.Equal(JsonValueKind.Object, el.GetProperty("@context")[1].ValueKind);
         Assert.Equal("urn:uuid:aaaaaaaa-bbbb-4ccc-dddd-eeeeeeeeeeee", el.GetProperty("id").GetString());
 

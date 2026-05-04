@@ -39,6 +39,12 @@
 - **`@context` (VC y VC embebido en VP):** array con **(1)** la URL del contexto W3C VC v1 `https://www.w3.org/2018/credentials/v1` y **(2)** un **objeto inline** que define los términos de dominio propios (claims de `TituloGraduacion`, tipo de credencial, etc.). No se exige en slice A un contexto hospedado solo bajo `https://` del producto.
 - **`type` (VC, nivel raíz):** incluye **`VerifiableCredential`** y **`TituloGraduacionCredential`** (string canónico para el perfil `TituloGraduacion` / enum en código).
 
+## Document conformance module (slice A, agreed architecture)
+
+- Además del kernel y de **`SovereignID.VcSliceA.Eip712`** (Nethereum), el slice puede incluir un ensamblado **solo de política de documento** (sin Nethereum), p. ej. **`SovereignID.VcSliceA.Document`**, colocado junto al proyecto EIP-712 bajo `src/shared/`.
+- Ese **módulo** valida la forma del **VC** `TituloGraduacion` tal como circula en JSON (entrada orientada a **`JsonElement`** / documento parseado), con **paridad literal** con lo que se firma y transporta: incluye **`credentialSubject`** estricto (solo claves permitidas, mismas reglas de claims que emisión) y el **segundo `@context` inline** con el **mismo mapa de términos** (IRIs) que la construcción de documento del emisor — producto cerrado frente a variantes JSON-LD permisibles pero no emitidas.
+- **Issuer** y **Verifier** deben ejecutar esa validación en sus flujos (emisor antes de firmar; verificador al aceptar el VC embebido). El **módulo** devuelve **códigos de error canónicos internos** (sin prefijo de bounded context); cada contexto **mapea** a sus propios prefijos (`issuer_*`, `vc_*`, etc.) en el borde de aplicación o API.
+
 ## Specification workflow (Phase 3, slice A)
 
 - La implementación del primer incremento **no arranca** hasta tener un cambio OpenSpec en `openspec/changes/<cambio>/` con `proposal.md`, `design.md`, `tasks.md` y las especificaciones acordadas; el código sigue esas tareas.

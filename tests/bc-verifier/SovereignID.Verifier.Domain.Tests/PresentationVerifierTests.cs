@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Nethereum.Signer;
 using SovereignID.Issuer.Application.TituloGraduacion;
@@ -110,7 +109,7 @@ public class PresentationVerifierTests
     [Fact]
     public async Task Verify_wrong_holder_signature_fails()
     {
-        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+        var (vc, issuerDid, holderDid, _, _) = await IssueVcAsync(
             ReferenceInstant,
             Guid.Parse("cccccccc-cccc-4ccc-cccc-cccccccccccc"));
 
@@ -124,7 +123,7 @@ public class PresentationVerifierTests
     [Fact]
     public async Task Verify_holder_mismatch_subject_fails()
     {
-        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+        var (vc, issuerDid, _, _, holderKey) = await IssueVcAsync(
             ReferenceInstant,
             Guid.Parse("dddddddd-dddd-4ddd-dddd-dddddddddddd"));
 
@@ -198,12 +197,99 @@ public class PresentationVerifierTests
         Assert.Equal("vc_expirationDate_expired", outcome.ErrorCode);
     }
 
-    private sealed class TestClock : IClock
+    [Fact]
+    public async Task Verify_missing_vp_proof_fails()
     {
-        private readonly DateTimeOffset instant;
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("33333333-4444-4333-8444-555555555555"));
 
-        public TestClock(DateTimeOffset instant) => this.instant = instant;
+        var vpJson = WrapVp(vc, holderDid, issuerDid, holderKey);
+        var vp = JsonNode.Parse(vpJson)!.AsObject();
+        vp.Remove("proof");
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("vp_proof_missing", outcome.ErrorCode);
+    }
 
+    [Fact]
+    public async Task Verify_vp_proof_type_invalid_fails()
+    {
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("44444444-5555-4333-8444-555555555555"));
+
+        var vpJson = WrapVp(vc, holderDid, issuerDid, holderKey);
+        var vp = JsonNode.Parse(vpJson)!.AsObject();
+        vp["proof"]!["type"] = "wrong-type";
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("proof_type_invalid", outcome.ErrorCode);
+    }
+
+    [Fact]
+    public async Task Verify_vp_proof_value_missing_fails()
+    {
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("55555555-6666-4333-8444-555555555555"));
+
+        var vpJson = WrapVp(vc, holderDid, issuerDid, holderKey);
+        var vp = JsonNode.Parse(vpJson)!.AsObject();
+        vp["proof"]!.AsObject().Remove("proofValue");
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("proof_value_missing", outcome.ErrorCode);
+    }
+
+    [Fact]
+    public async Task Verify_vp_proof_value_empty_fails()
+    {
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("66666666-7777-4333-8444-555555555555"));
+
+        var vpJson = WrapVp(vc, holderDid, issuerDid, holderKey);
+        var vp = JsonNode.Parse(vpJson)!.AsObject();
+        vp["proof"]!["proofValue"] = "   ";
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("proof_value_empty", outcome.ErrorCode);
+    }
+
+    [Fact]
+    public async Task Verify_vp_signature_recover_failed_on_bad_proof()
+    {
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("77777777-8888-4333-8444-555555555555"));
+
+        var vpJson = WrapVp(vc, holderDid, issuerDid, holderKey);
+        var vp = JsonNode.Parse(vpJson)!.AsObject();
+        vp["proof"]!["proofValue"] = "0x" + new string('f', 130);
+        var outcome = PresentationVerifier.Verify(vp.ToJsonString(), ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("vp_signature_recover_failed", outcome.ErrorCode);
+    }
+
+    [Fact]
+    public async Task Verify_vc_proof_value_empty_fails()
+    {
+        var (vc, issuerDid, holderDid, _, holderKey) = await IssueVcAsync(
+            ReferenceInstant,
+            Guid.Parse("88888888-9999-4333-8444-555555555555"));
+
+        var vcNode = JsonNode.Parse(vc)!.AsObject();
+        vcNode["proof"]!["proofValue"] = " ";
+        var tamperedVc = vcNode.ToJsonString();
+        var vpJson = WrapVp(tamperedVc, holderDid, issuerDid, holderKey);
+        var outcome = PresentationVerifier.Verify(vpJson, ReferenceInstant);
+        Assert.False(outcome.IsSuccess);
+        Assert.Equal("proof_value_empty", outcome.ErrorCode);
+    }
+
+    private sealed class TestClock(DateTimeOffset instant) : IClock
+    {
         public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -211,12 +297,8 @@ public class PresentationVerifierTests
         }
     }
 
-    private sealed class TestGuid : IGuidGenerator
+    private sealed class TestGuid(Guid value) : IGuidGenerator
     {
-        private readonly Guid value;
-
-        public TestGuid(Guid value) => this.value = value;
-
         public Task<Guid> NewGuidAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

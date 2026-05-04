@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SovereignID.VcSliceA.Document\SovereignID.VcSliceA.Document.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Nethereum.ABI" Version="4.26.0" />
     <PackageReference Include="Nethereum.Signer" Version="4.26.0" />
     <PackageReference Include="Nethereum.Signer.EIP712" Version="4.26.0" />

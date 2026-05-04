@@ -30,3 +30,5 @@ appsettings.Development.json
 /.cursor
 .vscode/settings.json
 /graphify-out/cache
+/coverage-ci-check
+/coverage-local
