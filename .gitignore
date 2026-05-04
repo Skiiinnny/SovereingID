@@ -8,6 +8,8 @@ out/
 *.log
 TestResults/
 coverage/
+# Salidas locales de Coverlet con -p:CoverageDirectory=coverage-* (no versionar)
+/coverage-*/
 
 ## IDE
 .vs/
