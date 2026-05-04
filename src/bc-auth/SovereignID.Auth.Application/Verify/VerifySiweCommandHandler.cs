@@ -5,29 +5,15 @@ using SovereignID.SharedKernel.Domain;
 
 namespace SovereignID.Auth.Application.Verify;
 
-public sealed class VerifySiweCommandHandler : ICommandHandler<VerifySiweCommand, Result<VerifySiweResult, AuthError>>
+public sealed class VerifySiweCommandHandler(
+    ISiweMessageParser parser,
+    IAuthChallengeRepository repository,
+    IClock clock,
+    ISiweSignatureVerifier signatureVerifier,
+    IJwtTokenIssuer jwtTokenIssuer)
+    : ICommandHandler<VerifySiweCommand, Result<VerifySiweResult, AuthError>>
 {
     private static readonly TimeSpan SessionTtl = TimeSpan.FromHours(24);
-
-    private readonly ISiweMessageParser parser;
-    private readonly IAuthChallengeRepository repository;
-    private readonly IClock clock;
-    private readonly ISiweSignatureVerifier signatureVerifier;
-    private readonly IJwtTokenIssuer jwtTokenIssuer;
-
-    public VerifySiweCommandHandler(
-        ISiweMessageParser parser,
-        IAuthChallengeRepository repository,
-        IClock clock,
-        ISiweSignatureVerifier signatureVerifier,
-        IJwtTokenIssuer jwtTokenIssuer)
-    {
-        this.parser = parser;
-        this.repository = repository;
-        this.clock = clock;
-        this.signatureVerifier = signatureVerifier;
-        this.jwtTokenIssuer = jwtTokenIssuer;
-    }
 
     public async Task<Result<VerifySiweResult, AuthError>> HandleAsync(VerifySiweCommand input, CancellationToken cancellationToken)
     {

@@ -6,16 +6,9 @@ namespace SovereignID.Verifier.Application.Presentation;
 /// <summary>
 /// Obtiene el instante actual vía <see cref="IClock"/> y delega en <see cref="PresentationVerifier"/>.
 /// </summary>
-public sealed class VerifyPresentationCommandHandler
+public sealed class VerifyPresentationCommandHandler(IClock clock)
     : ICommandHandler<VerifyPresentationCommand, PresentationVerificationOutcome>
 {
-    private readonly IClock clock;
-
-    public VerifyPresentationCommandHandler(IClock clock)
-    {
-        this.clock = clock;
-    }
-
     /// <inheritdoc />
     public async Task<PresentationVerificationOutcome> HandleAsync(
         VerifyPresentationCommand input,

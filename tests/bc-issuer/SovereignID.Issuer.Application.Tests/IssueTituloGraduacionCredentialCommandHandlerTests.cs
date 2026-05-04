@@ -99,12 +99,8 @@ public class IssueTituloGraduacionCredentialCommandHandlerTests
         }
     }
 
-    private sealed class TestClock : IClock
+    private sealed class TestClock(DateTimeOffset instant) : IClock
     {
-        private readonly DateTimeOffset instant;
-
-        public TestClock(DateTimeOffset instant) => this.instant = instant;
-
         public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -112,12 +108,8 @@ public class IssueTituloGraduacionCredentialCommandHandlerTests
         }
     }
 
-    private sealed class TestGuid : IGuidGenerator
+    private sealed class TestGuid(Guid value) : IGuidGenerator
     {
-        private readonly Guid value;
-
-        public TestGuid(Guid value) => this.value = value;
-
         public Task<Guid> NewGuidAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

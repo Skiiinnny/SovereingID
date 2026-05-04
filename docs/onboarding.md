@@ -125,16 +125,26 @@ Coverage outputs under `coverage/**`:
 
 ## CI and SonarQube
 
-`.github/workflows/ci.yml` (`ubuntu-latest`): restore, build, test with coverage (`Category!=Integration`), per-BC coverage via `ci/Check-BcCoverage.ps1`.
+`.github/workflows/ci.yml` (`ubuntu-latest`): restore, build, test with coverage (`Category!=Integration`), per-BC coverage via `ci/Check-BcCoverage.ps1`, uploads artifact **`coverage`**.
 
-`.github/workflows/sonarqube.yml` (`windows-latest`): downloads the coverage artifact and passes OpenCover paths, exclusions, and `sonar.qualitygate.wait=true` on `dotnet-sonarscanner begin`.
+`.github/workflows/sonarqube.yml` (`windows-latest`): runs **after** a successful **`CI`** run via `workflow_run` (not a second checkout of every `pull_request` event). It downloads the **`coverage`** artifact from that CI run, then runs `dotnet-sonarscanner begin` with OpenCover paths, `sonar.exclusions` / `sonar.coverage.exclusions`, and `sonar.qualitygate.wait=true`, followed by `dotnet build` and `scanner end`.
 
-SonarCloud workflow:
+### SonarCloud quality gate (`Sonar way`, free plan)
 
-- Triggers on `push` to `main` and on `pull_request` (`opened`, `synchronize`, `reopened`).
-- Requires `SONAR_TOKEN` in repository secrets.
+On SonarCloud **Free**, **custom quality gates** (clone/edit) are not available; the org uses the built-in **`Sonar way`** gate. That gate still enforces strong rules on **new code**, including **test coverage** (typically **≥ 80 %** on new code — see your org’s **Conditions on New Code** list).
 
-**PR checklist:** target `main`; confirm `CI` and `SonarQube` succeed; confirm SonarCloud shows the branch without auth errors.
+**What you should verify once:**
+
+1. Organization **`skiiinnny`** → **Administration** → **Quality Gates** → open **`Sonar way`** and read the **Coverage** (new code) condition.
+2. Project **`Skiiinnny_SovereingID`** → **Project settings** → **Quality Gate** → confirm the project uses **`Sonar way`** (default), not a custom gate blocked by plan limits.
+
+**Overall / per-BC 70 %:** enforced in **GitHub Actions** via `ci/Check-BcCoverage.ps1` and locally via `coverlet.runsettings`; SonarCloud Free does **not** add a second “overall coverage ≥ 70 %” gate condition.
+
+Optional: attach a screenshot of the project’s quality gate assignment or `Sonar way` conditions to the verification PR (e.g. inside `<details>`).
+
+Requires **`SONAR_TOKEN`** (SonarCloud **user** token, not a project token) in repository secrets.
+
+**PR checklist:** target `main`; wait for **`CI`** to finish (success), then confirm **`SonarQube`** succeeds on the same commit; confirm SonarCloud shows the branch without auth errors.
 
 ## Deploying `Notary.sol`
 

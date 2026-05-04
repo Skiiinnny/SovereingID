@@ -58,10 +58,8 @@ public class JwtBearerTokenIssuerTests
         return new JwtBearerTokenIssuer(new FakeClock(now), options);
     }
 
-    private sealed class FakeClock : IClock
+    private sealed class FakeClock(DateTimeOffset now) : IClock
     {
-        private readonly DateTimeOffset now;
-        public FakeClock(DateTimeOffset now) => this.now = now;
         public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken) => Task.FromResult(now);
     }
 }

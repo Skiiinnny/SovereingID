@@ -6,16 +6,26 @@
 
 ---
 
-## 1. Quality Gate en SonarCloud (one-off manual)
+## 1. Quality Gate en SonarCloud (plan gratuito → `Sonar way`)
 
-- [ ] 1.1 Entrar a SonarCloud → `skiiinnny` → Administration → Quality Gates.
-- [ ] 1.2 Clonar `Sonar way` con el nombre `SovereignID default`.
-- [ ] 1.3 Añadir condición **sobre overall code**: `Coverage` `is less than` `70`.
-- [ ] 1.4 Verificar que `new_coverage < 80` sigue presente (heredada de Sonar way).
-- [ ] 1.5 Asignar `SovereignID default` al proyecto `Skiiinnny_SovereingID`
-  (Project Settings → Quality Gate).
-- [ ] 1.6 Capturar screenshot del gate activo y guardarlo en el PR como
-  evidencia (basta un `<details>` en la descripción del PR).
+> En SonarCloud **Free** no se pueden crear ni clonar Quality Gates
+> personalizados (p. ej. aparece **Upgrade** junto a gates no built-in).
+> Este proyecto usa el gate built-in **`Sonar way`**, que incluye cobertura
+> suficiente en **código nuevo** (típicamente **≥ 80 %** en new code). El
+> piso **≥ 70 % por bounded context** y el umbral Coverlet local siguen
+> aplicándose **solo en CI**, no como condición extra en Sonar.
+>
+> Checklist: [`docs/onboarding.md`](../../../docs/onboarding.md) → **SonarCloud quality gate (`Sonar way`, free plan)**.
+
+- [ ] 1.1 En SonarCloud → organización `skiiinnny` → **Quality Gates**,
+  revisar que **`Sonar way`** es el gate **Built-in** / **Default** y
+  anotar la condición de **Coverage on new code** (p. ej. ≥ 80 %).
+- [ ] 1.2 Proyecto **`Skiiinnny_SovereingID`** → **Project settings** →
+  **Quality Gate**: confirmar que el proyecto está en **`Sonar way`**
+  (o equivalente “default / no custom” permitido por el plan).
+- [ ] 1.3 (Recomendado) Captura de la asignación del proyecto o de las
+  condiciones visibles de **`Sonar way`**, en el PR de verificación (p. ej.
+  `<details>` en la descripción).
 
 ## 2. Coverlet uniforme
 
@@ -177,7 +187,7 @@
   reporta:
   - `coverage` > 0 %.
   - `tests` con un número > 0.
-  - Quality Gate `SovereignID default` asignado y estado `OK`.
+  - Quality Gate **`Sonar way`** (o el default del plan) asignado y estado `OK`.
 - [ ] 9.5 Abrir un PR de prueba sintético que elimine un test
   significativo (p. ej. `HappyPath_ReturnsJwtAndAddress`). Verificar
   que `ci.yml` o el gate Sonar lo rechazan. Cerrar el PR sin mergear.
@@ -185,8 +195,7 @@
 ## 10. Cierre
 
 - [ ] 10.1 Marcar como completas todas las tasks anteriores.
-- [x] 10.2 Confirmar que `openspec validate --change
-  sonar-coverage-phase-2 --strict` pasa (sin errores de schema).
+- [x] 10.2 Confirmar que `openspec validate sonar-coverage-phase-2 --strict --type change` pasa (sin errores de schema).
 - [ ] 10.3 Cuando CI y Sonar publiquen métricas estables durante al
   menos un ciclo de PR → main, ejecutar el workflow de archivo del
   change (ver `.cursor/skills/openspec-archive-change/SKILL.md`).

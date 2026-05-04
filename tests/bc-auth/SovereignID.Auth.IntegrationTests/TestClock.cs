@@ -2,11 +2,9 @@ using SovereignID.SharedKernel.Domain;
 
 namespace SovereignID.Auth.IntegrationTests;
 
-public sealed class TestClock : IClock
+public sealed class TestClock(DateTimeOffset now) : IClock
 {
-    public TestClock(DateTimeOffset now) => Now = now;
-
-    public DateTimeOffset Now { get; private set; }
+    public DateTimeOffset Now { get; private set; } = now;
 
     public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken) =>
         Task.FromResult(Now);

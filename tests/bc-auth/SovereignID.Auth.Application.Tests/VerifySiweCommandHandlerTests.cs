@@ -152,12 +152,9 @@ public class VerifySiweCommandHandlerTests
         }
     }
 
-    private sealed class FakeParser : ISiweMessageParser
+    private sealed class FakeParser(SiweMessage parsed) : ISiweMessageParser
     {
-        private readonly SiweMessage parsed;
         public AuthError? ParseFailure { get; set; }
-
-        public FakeParser(SiweMessage parsed) => this.parsed = parsed;
 
         public Task<Result<SiweMessage, AuthError>> ParseAsync(string payload, CancellationToken cancellationToken)
         {
@@ -170,11 +167,9 @@ public class VerifySiweCommandHandlerTests
         }
     }
 
-    private sealed class FakeRepository : IAuthChallengeRepository
+    private sealed class FakeRepository(AuthChallenge challenge) : IAuthChallengeRepository
     {
-        public FakeRepository(AuthChallenge challenge) => StoredChallenge = challenge;
-
-        public AuthChallenge? StoredChallenge { get; set; }
+        public AuthChallenge? StoredChallenge { get; set; } = challenge;
         public int DeleteCalls { get; private set; }
         public DomainNonce? LastDeletedNonce { get; private set; }
 
@@ -192,33 +187,28 @@ public class VerifySiweCommandHandlerTests
         }
     }
 
-    private sealed class FakeClock : IClock
+    private sealed class FakeClock(DateTimeOffset now) : IClock
     {
-        public FakeClock(DateTimeOffset now) => Now = now;
-        public DateTimeOffset Now { get; set; }
+        public DateTimeOffset Now { get; set; } = now;
         public Task<DateTimeOffset> GetUtcNowAsync(CancellationToken cancellationToken) => Task.FromResult(Now);
     }
 
-    private sealed class FakeSignatureVerifier : ISiweSignatureVerifier
+    private sealed class FakeSignatureVerifier(EthereumAddress recovered) : ISiweSignatureVerifier
     {
-        public FakeSignatureVerifier(EthereumAddress recovered) => Recovered = recovered;
-        public EthereumAddress Recovered { get; set; }
+        public EthereumAddress Recovered { get; set; } = recovered;
+
         public Task<EthereumAddress> RecoverAddressAsync(string message, Signature signature, CancellationToken cancellationToken)
             => Task.FromResult(Recovered);
     }
 
-    private sealed class FakeJwtTokenIssuer : IJwtTokenIssuer
+    private sealed class FakeJwtTokenIssuer(JwtToken token) : IJwtTokenIssuer
     {
-        private readonly JwtToken token;
-        public FakeJwtTokenIssuer(JwtToken token) => this.token = token;
         public Task<JwtToken> IssueAsync(EthereumAddress subject, TimeSpan lifetime, CancellationToken cancellationToken)
             => Task.FromResult(token);
     }
 
-    private sealed class FakeNonceGenerator : INonceGenerator
+    private sealed class FakeNonceGenerator(DomainNonce nonce) : INonceGenerator
     {
-        private readonly DomainNonce nonce;
-        public FakeNonceGenerator(DomainNonce nonce) => this.nonce = nonce;
         public Task<DomainNonce> NewAsync(CancellationToken cancellationToken) => Task.FromResult(nonce);
     }
 }
