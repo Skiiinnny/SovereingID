@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="SovereignID.Verifier.Application.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SovereignID.Verifier.Domain\SovereignID.Verifier.Domain.csproj" />
     <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
     <ProjectReference Include="..\..\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
