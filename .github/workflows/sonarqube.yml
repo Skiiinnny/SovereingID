@@ -23,12 +23,13 @@ jobs:
           java-version: 17
           distribution: "zulu"
       # Aquí: clon explícito del repo base (no el fork) con historial completo para SonarScanner.
-      # `uses` = actions/checkout@v4 pinneado por SHA. `ref` = merge del PR (como CI en pull_request) o rama del push; forks excluidos por el `if` del job (S7631).
+      # `ref` = `head_sha` del run de CI (mismo commit que generó el artifact `coverage`).
+      # No usar `refs/pull/N/merge`: GitHub no garantiza ese ref (p. ej. conflictos con main → fatal: couldn't find remote ref).
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: ${{ github.repository }}
           fetch-depth: 0
-          ref: ${{ github.event.workflow_run.event == 'pull_request' && format('refs/pull/{0}/merge', github.event.workflow_run.pull_requests[0].number) || github.event.workflow_run.head_branch }}
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Ensure Sonar cache directories
         shell: powershell
         run: |
