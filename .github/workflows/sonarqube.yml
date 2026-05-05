@@ -101,30 +101,50 @@ jobs:
       # La protección de rama exige checks sobre el SHA del PR → usar pull_requests[0].head.sha.
       - name: Post commit status for merge gate
         if: always() && github.event.workflow_run.head_repository.full_name == github.repository
+        env:
+          WFR_EVENT: ${{ github.event.workflow_run.event }}
+          WFR_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          WFR_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          WFR_HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
             const outcome = '${{ steps.sonar_scan.outcome }}';
-            const wr = context.payload.workflow_run;
-            let sha = wr.head_sha;
-            if (wr.event === 'pull_request') {
+            const wrEvent = process.env.WFR_EVENT || '';
+            const wrHeadSha = process.env.WFR_HEAD_SHA || '';
+            const wrHeadBranch = process.env.WFR_HEAD_BRANCH || '';
+            const wrHeadOwner = process.env.WFR_HEAD_OWNER || '';
+            let sha = wrHeadSha;
+            if (wrEvent === 'pull_request') {
               let headSha = null;
-              if (Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0 && wr.pull_requests[0].head?.sha) {
+              const wr = context.payload.workflow_run;
+              if (wr && Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0 && wr.pull_requests[0].head?.sha) {
                 headSha = wr.pull_requests[0].head.sha;
               }
-              if (!headSha) {
+              if (!headSha && wrHeadSha) {
                 const { data: pulls } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  commit_sha: wr.head_sha,
+                  commit_sha: wrHeadSha,
                 });
                 if (pulls.length > 0 && pulls[0].head?.sha) {
                   headSha = pulls[0].head.sha;
                 }
               }
+              if (!headSha && wrHeadBranch && wrHeadOwner) {
+                const { data: openPrs } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                  head: `${wrHeadOwner}:${wrHeadBranch}`,
+                });
+                if (openPrs.length > 0 && openPrs[0].head?.sha) {
+                  headSha = openPrs[0].head.sha;
+                }
+              }
               if (headSha) sha = headSha;
             }
-            console.log(`SovereignID / SonarQube status: outcome=${outcome} sha=${sha} head_sha=${wr.head_sha} event=${wr.event}`);
+            console.log(`SovereignID / SonarQube status: outcome=${outcome} sha=${sha} head_sha=${wrHeadSha} event=${wrEvent}`);
             const state = outcome === 'success' ? 'success' : 'failure';
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
