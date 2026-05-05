@@ -107,10 +107,24 @@ jobs:
             const outcome = '${{ steps.sonar_scan.outcome }}';
             const wr = context.payload.workflow_run;
             let sha = wr.head_sha;
-            if (wr.event === 'pull_request' && Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0) {
-              const headSha = wr.pull_requests[0].head && wr.pull_requests[0].head.sha;
+            if (wr.event === 'pull_request') {
+              let headSha = null;
+              if (Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0 && wr.pull_requests[0].head?.sha) {
+                headSha = wr.pull_requests[0].head.sha;
+              }
+              if (!headSha) {
+                const { data: pulls } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: wr.head_sha,
+                });
+                if (pulls.length > 0 && pulls[0].head?.sha) {
+                  headSha = pulls[0].head.sha;
+                }
+              }
               if (headSha) sha = headSha;
             }
+            console.log(`SovereignID / SonarQube status: outcome=${outcome} sha=${sha} head_sha=${wr.head_sha} event=${wr.event}`);
             const state = outcome === 'success' ? 'success' : 'failure';
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,

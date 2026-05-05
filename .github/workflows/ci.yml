@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      statuses: write
 
     steps:
       # Aquí: clon del árbol que dispara el workflow (push a la rama o merge de PR en pull_request).
@@ -47,16 +46,21 @@ jobs:
           path: coverage/
           retention-days: 7
 
-      # Commit status en el tip del PR (o en el SHA del push a main). Mismo repo que la base: forks omiten (token no publica en el SHA del fork).
+  # Publicar el commit status en un job posterior: si no, el estado aparece antes de que GitHub cierre el check run "CI / build-test".
+  post-ci-status:
+    needs: build-test
+    if: always() && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
       - name: Post commit status for merge gate
-        if: always() && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const o1 = '${{ steps.dotnet_test.outcome }}';
-            const o2 = '${{ steps.bc_coverage.outcome }}';
-            const o3 = '${{ steps.upload_coverage.outcome }}';
-            const ok = o1 === 'success' && o2 === 'success' && o3 === 'success';
+            const result = '${{ needs.build-test.result }}';
+            const ok = result === 'success';
             const state = ok ? 'success' : 'failure';
             const sha = context.eventName === 'pull_request'
               ? context.payload.pull_request.head.sha
