@@ -97,13 +97,20 @@ jobs:
 
       # workflow_run no siempre asocia el check del job al SHA de la PR; el commit status sí.
       # En GitHub → Settings → Branches → regla en `main`: Required status checks → `SovereignID / SonarQube`.
+      # En PRs, workflow_run.head_sha suele ser el merge commit de prueba, no el tip de la rama.
+      # La protección de rama exige checks sobre el SHA del PR → usar pull_requests[0].head.sha.
       - name: Post commit status for merge gate
         if: always() && github.event.workflow_run.head_repository.full_name == github.repository
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
             const outcome = '${{ steps.sonar_scan.outcome }}';
-            const sha = '${{ github.event.workflow_run.head_sha }}';
+            const wr = context.payload.workflow_run;
+            let sha = wr.head_sha;
+            if (wr.event === 'pull_request' && Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0) {
+              const headSha = wr.pull_requests[0].head && wr.pull_requests[0].head.sha;
+              if (headSha) sha = headSha;
+            }
             const state = outcome === 'success' ? 'success' : 'failure';
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
