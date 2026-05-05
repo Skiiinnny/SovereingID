@@ -1,6 +1,7 @@
 name: SonarQube
 
 # Solo tras CI: aquí siempre hay artefacto `coverage` con OpenCover.
+# Mismo OS que CI (ubuntu-latest) para que las rutas del OpenCover coincidan con el análisis.
 # Un disparo directo pull_request analizaba sin cobertura → 0 % en código nuevo y quality gate incoherente.
 on:
   workflow_run:
@@ -12,7 +13,7 @@ jobs:
     name: Build and analyze
     # workflow_run corre con token del repo base; no checkout/ejecución de MSBuild del árbol de un fork (S7631).
     if: ${{ github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event != 'pull_request' || github.event.workflow_run.head_repository.full_name == github.repository) }}
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: read
@@ -22,6 +23,10 @@ jobs:
         with:
           java-version: 17
           distribution: "zulu"
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: "9.0.x"
       # Aquí: clon explícito del repo base (no el fork) con historial completo para SonarScanner.
       # `ref` = `head_sha` del run de CI (mismo commit que generó el artifact `coverage`).
       # No usar `refs/pull/N/merge`: GitHub no garantiza ese ref (p. ej. conflictos con main → fatal: couldn't find remote ref).
@@ -31,29 +36,27 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.workflow_run.head_sha }}
       - name: Ensure Sonar cache directories
-        shell: powershell
         run: |
-          New-Item -Path "$HOME\sonar\cache" -ItemType Directory -Force | Out-Null
-          New-Item -Path "${{ runner.temp }}\scanner" -ItemType Directory -Force | Out-Null
+          mkdir -p "$HOME/sonar/cache"
+          mkdir -p "${{ runner.temp }}/scanner"
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
-          path: ~\sonar\cache
+          path: ~/sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Cache SonarQube Cloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
-          path: ${{ runner.temp }}\scanner
+          path: ${{ runner.temp }}/scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install SonarQube Cloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
         run: |
-          New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+          mkdir -p "${{ runner.temp }}/scanner"
+          dotnet tool update dotnet-sonarscanner --tool-path "${{ runner.temp }}/scanner"
       # Interpolar ${{ secrets.SONAR_TOKEN }} en /d:sonar.token=... con cadena vacía
       # provoca: "The format of the analysis property sonar.token= is invalid".
       # Usa la variable de entorno y asegura el secreto SONAR_TOKEN en el repo.
@@ -70,23 +73,22 @@ jobs:
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
         run: |
-          $scanner = "${{ runner.temp }}\scanner\dotnet-sonarscanner"
-          if ([string]::IsNullOrWhiteSpace($env:SONAR_TOKEN)) {
-            Write-Error "SONAR_TOKEN is empty. Configure repository secret SONAR_TOKEN (SonarQube/SonarCloud user token)."
+          set -euo pipefail
+          SCANNER="${{ runner.temp }}/scanner/dotnet-sonarscanner"
+          if [ -z "${SONAR_TOKEN:-}" ]; then
+            echo "::error::SONAR_TOKEN is empty. Configure repository secret SONAR_TOKEN (SonarQube/SonarCloud user token)."
             exit 1
-          }
-          & $scanner begin `
-            /k:"Skiiinnny_SovereingID" `
-            /o:"skiiinnny" `
-            /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.token="$($env:SONAR_TOKEN)" `
-            /d:sonar.qualitygate.wait=true `
-            /d:sonar.cs.opencover.reportsPaths="coverage/**/coverage.opencover.xml" `
-            /d:sonar.exclusions="src/bc-auth/SovereignID.Auth.Api/wwwroot/**,src/legacy/**,graphify-out/**" `
+          fi
+          "$SCANNER" begin \
+            /k:"Skiiinnny_SovereingID" \
+            /o:"skiiinnny" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.token="${SONAR_TOKEN}" \
+            /d:sonar.qualitygate.wait=true \
+            /d:sonar.cs.opencover.reportsPaths="coverage/**/coverage.opencover.xml" \
+            /d:sonar.exclusions="src/bc-auth/SovereignID.Auth.Api/wwwroot/**,src/legacy/**,graphify-out/**" \
             /d:sonar.coverage.exclusions="src/legacy/**,**/*Marker.cs,**/Program.cs"
           dotnet build "SovereignID.sln" -c Release
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          & $scanner end `
-            /d:sonar.token="$($env:SONAR_TOKEN)"
+          "$SCANNER" end \
+            /d:sonar.token="${SONAR_TOKEN}"
