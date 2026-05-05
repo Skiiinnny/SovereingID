@@ -28,8 +28,10 @@ over brevity. Always explain crypto concepts when they appear in code.
    Always use environment variables or `appsettings.Development.json` (gitignored).
 
 5. **Always write tests.** Every public method in `SovereignID.Crypto` needs a
-   unit test. Integration tests (hitting Sepolia) must be marked
-   `[Trait("Category","Integration")]` so they can be skipped in CI.
+   unit test. Use `[Trait("Category","Integration")]` only for tests that need
+   real external I/O (live RPC, chain, external DB, etc.) so CI can skip them
+   with `Category!=Integration`. In-process `WebApplicationFactory` tests do
+   not use that trait; see `README.md` and `openspec/specs/test-coverage-ingestion/spec.md`.
 
 ## Code Conventions
 
@@ -65,7 +67,7 @@ over brevity. Always explain crypto concepts when they appear in code.
 - **This section** — Which folder under `openspec/changes/` holds the **`tasks.md` you must follow** for spec-driven implementation. That folder name does not always match the roadmap row number.
 
 **Current change (follow this `tasks.md`):**  
-`openspec/changes/sonar-coverage-phase-2/tasks.md` (cobertura / SonarCloud / CI). When a new product milestone is proposed, point this line at its folder under `openspec/changes/`.
+None — no active folder under `openspec/changes/` (only `archive/`). For new work, add a change via the OpenSpec propose workflow and point this line at its `tasks.md`.
 
 **Reference (archived changes):**  
 Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`. 
@@ -74,6 +76,7 @@ Phase 3 VC — slice A (dominio + EIP-712, sin cadena/IPFS) → `openspec/change
 VC slice A — conformidad de documento (`SovereignID.VcSliceA.Document`) → `openspec/changes/archive/2026-05-03-vc-slice-a-document-conformance/`.
 SonarQube debt (Fase 2 alignment) → `openspec/changes/archive/2026-05-03-sonar-debt-phase-2/`.  
 VP envelope vs cadena embebida (verificador) → `openspec/changes/archive/2026-05-04-verifier-vp-envelope-chain-split/`.
+Sonar / cobertura / CI (`test-coverage-ingestion`) → `openspec/changes/archive/2026-05-04-sonar-coverage-phase-2/`.
 
 When the current change is complete and moved to `openspec/changes/archive/`, update the **Current change** path above to the next active folder.
 

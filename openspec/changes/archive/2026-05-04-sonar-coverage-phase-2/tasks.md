@@ -1,6 +1,6 @@
 # Tasks: sonar-coverage-phase-2
 
-> SovereignID · openspec/changes/sonar-coverage-phase-2/tasks.md
+> SovereignID · openspec/changes/archive/2026-05-04-sonar-coverage-phase-2/tasks.md
 > Estimated: 1 week · 4-8 hrs total
 > Order: gate → coverage config → exclusions → CI → Sonar → docs → verify
 
@@ -17,13 +17,13 @@
 >
 > Checklist: [`docs/onboarding.md`](../../../docs/onboarding.md) → **SonarCloud quality gate (`Sonar way`, free plan)**.
 
-- [ ] 1.1 En SonarCloud → organización `skiiinnny` → **Quality Gates**,
+- [x] 1.1 En SonarCloud → organización `skiiinnny` → **Quality Gates**,
   revisar que **`Sonar way`** es el gate **Built-in** / **Default** y
   anotar la condición de **Coverage on new code** (p. ej. ≥ 80 %).
-- [ ] 1.2 Proyecto **`Skiiinnny_SovereingID`** → **Project settings** →
+- [x] 1.2 Proyecto **`Skiiinnny_SovereingID`** → **Project settings** →
   **Quality Gate**: confirmar que el proyecto está en **`Sonar way`**
   (o equivalente “default / no custom” permitido por el plan).
-- [ ] 1.3 (Recomendado) Captura de la asignación del proyecto o de las
+- [x] 1.3 (Recomendado) Captura de la asignación del proyecto o de las
   condiciones visibles de **`Sonar way`**, en el PR de verificación (p. ej.
   `<details>` en la descripción).
 
@@ -172,30 +172,30 @@
 
 ## 9. Verificación end-to-end
 
-- [ ] 9.1 Crear rama `feature/sonar-coverage-phase-2` y empujar los
+- [x] 9.1 Crear rama `feature/sonar-coverage-phase-2` y empujar los
   cambios de §2 a §8.
-- [ ] 9.2 Abrir PR a `main`. Confirmar en el run:
+- [x] 9.2 Abrir PR a `main`. Confirmar en el run:
   - `ci.yml` verde, con tabla per-BC en el log mostrando
     `bc-auth ≥ 70 %` y `shared ≥ 70 %` (o warnings para BCs vacíos).
   - Artifact `coverage` adjuntado al workflow run.
-- [ ] 9.3 Confirmar en el mismo PR que `sonarqube.yml`:
+- [x] 9.3 Confirmar en el mismo PR que `sonarqube.yml`:
   - Descarga el artifact correctamente.
   - Pasa al scanner `begin` las 3 propiedades Sonar (paths,
     exclusions, coverage.exclusions) y `sonar.qualitygate.wait=true`.
   - El paso "Build and analyze" devuelve exit 0.
-- [ ] 9.4 Verificar en SonarCloud que tras el merge el proyecto
+- [x] 9.4 Verificar en SonarCloud que tras el merge el proyecto
   reporta:
   - `coverage` > 0 %.
   - `tests` con un número > 0.
   - Quality Gate **`Sonar way`** (o el default del plan) asignado y estado `OK`.
-- [ ] 9.5 Abrir un PR de prueba sintético que elimine un test
+- [x] 9.5 Abrir un PR de prueba sintético que elimine un test
   significativo (p. ej. `HappyPath_ReturnsJwtAndAddress`). Verificar
   que `ci.yml` o el gate Sonar lo rechazan. Cerrar el PR sin mergear.
 
 ## 10. Cierre
 
-- [ ] 10.1 Marcar como completas todas las tasks anteriores.
+- [x] 10.1 Marcar como completas todas las tasks anteriores.
 - [x] 10.2 Confirmar que `openspec validate sonar-coverage-phase-2 --strict --type change` pasa (sin errores de schema).
-- [ ] 10.3 Cuando CI y Sonar publiquen métricas estables durante al
+- [x] 10.3 Cuando CI y Sonar publiquen métricas estables durante al
   menos un ciclo de PR → main, ejecutar el workflow de archivo del
   change (ver `.cursor/skills/openspec-archive-change/SKILL.md`).

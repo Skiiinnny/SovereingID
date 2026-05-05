@@ -2,7 +2,7 @@
 
 > **Canonical reference for all phases.**
 > Version: 1.0 · Date: April 2026
-> Owner: SovereignID project · Branch: `feature/sonar-coverage-phase-2`
+> Owner: SovereignID project · Branch: `main` (canonical)
 >
 > This document is the **single source of truth** for architecture, design
 > decisions, and roadmap. Every spec under `openspec/changes/*` must align
