@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
+      statuses: write
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4
@@ -71,6 +72,7 @@ jobs:
           if_no_artifact_found: fail
 
       - name: Build and analyze
+        id: sonar_scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -92,3 +94,64 @@ jobs:
           dotnet build "SovereignID.sln" -c Release
           "$SCANNER" end \
             /d:sonar.token="${SONAR_TOKEN}"
+
+      # workflow_run no siempre asocia el check del job al SHA de la PR; el commit status sí.
+      # En GitHub → Settings → Branches → regla en `main`: Required status checks → `SovereignID / SonarQube`.
+      # En PRs, workflow_run.head_sha suele ser el merge commit de prueba, no el tip de la rama.
+      # La protección de rama exige checks sobre el SHA del PR → usar pull_requests[0].head.sha.
+      - name: Post commit status for merge gate
+        if: always() && github.event.workflow_run.head_repository.full_name == github.repository
+        env:
+          WFR_EVENT: ${{ github.event.workflow_run.event }}
+          WFR_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          WFR_HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          WFR_HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const outcome = '${{ steps.sonar_scan.outcome }}';
+            const wrEvent = process.env.WFR_EVENT || '';
+            const wrHeadSha = process.env.WFR_HEAD_SHA || '';
+            const wrHeadBranch = process.env.WFR_HEAD_BRANCH || '';
+            const wrHeadOwner = process.env.WFR_HEAD_OWNER || '';
+            let sha = wrHeadSha;
+            if (wrEvent === 'pull_request') {
+              let headSha = null;
+              const wr = context.payload.workflow_run;
+              if (wr && Array.isArray(wr.pull_requests) && wr.pull_requests.length > 0 && wr.pull_requests[0].head?.sha) {
+                headSha = wr.pull_requests[0].head.sha;
+              }
+              if (!headSha && wrHeadSha) {
+                const { data: pulls } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: wrHeadSha,
+                });
+                if (pulls.length > 0 && pulls[0].head?.sha) {
+                  headSha = pulls[0].head.sha;
+                }
+              }
+              if (!headSha && wrHeadBranch && wrHeadOwner) {
+                const { data: openPrs } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                  head: `${wrHeadOwner}:${wrHeadBranch}`,
+                });
+                if (openPrs.length > 0 && openPrs[0].head?.sha) {
+                  headSha = openPrs[0].head.sha;
+                }
+              }
+              if (headSha) sha = headSha;
+            }
+            console.log(`SovereignID / SonarQube status: outcome=${outcome} sha=${sha} head_sha=${wrHeadSha} event=${wrEvent}`);
+            const state = outcome === 'success' ? 'success' : 'failure';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: sha,
+              state: state,
+              context: 'SovereignID / SonarQube',
+              description: outcome === 'success' ? 'Quality gate passed' : 'Quality gate failed or Sonar error',
+              target_url: `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });

@@ -9,6 +9,8 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       # Aquí: clon del árbol que dispara el workflow (push a la rama o merge de PR en pull_request).
@@ -28,15 +30,47 @@ jobs:
         run: dotnet build "SovereignID.sln" -c Release --no-restore
 
       - name: Test (exclude integration)
+        id: dotnet_test
         run: dotnet test "SovereignID.sln" -c Release --no-build --filter "Category!=Integration" --settings coverlet.runsettings --results-directory coverage --logger trx
 
       - name: Enforce per-BC coverage floor
+        id: bc_coverage
         shell: pwsh
         run: ./ci/Check-BcCoverage.ps1 -CoberturaPath "coverage/**/coverage.cobertura.xml" -Threshold 70
 
       - name: Upload coverage artifact
+        id: upload_coverage
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: coverage
           path: coverage/
           retention-days: 7
+
+  # Publicar el commit status en un job posterior: si no, el estado aparece antes de que GitHub cierre el check run "CI / build-test".
+  post-ci-status:
+    needs: build-test
+    if: always() && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+      - name: Post commit status for merge gate
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const result = '${{ needs.build-test.result }}';
+            const ok = result === 'success';
+            const state = ok ? 'success' : 'failure';
+            const sha = context.eventName === 'pull_request'
+              ? context.payload.pull_request.head.sha
+              : context.sha;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: sha,
+              state: state,
+              context: 'SovereignID / CI',
+              description: ok ? 'Tests and coverage gate passed' : 'CI failed (tests, BC coverage, or artifact upload)',
+              target_url: `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+            });

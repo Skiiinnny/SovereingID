@@ -125,9 +125,21 @@ Coverage outputs under `coverage/**`:
 
 ## CI and SonarQube
 
-`.github/workflows/ci.yml` (`ubuntu-latest`): restore, build, test with coverage (`Category!=Integration`), per-BC coverage via `ci/Check-BcCoverage.ps1`, uploads artifact **`coverage`**.
+`.github/workflows/ci.yml` (`ubuntu-latest`): job **`build-test`** restores, builds, tests with coverage (`Category!=Integration`), per-BC coverage via `ci/Check-BcCoverage.ps1`, uploads artifact **`coverage`**. A second job **`post-ci-status`** (`needs: build-test`) publishes **`SovereignID / CI`** on the **PR head** (or on the pushed commit for `push` to `main`) so the status appears only after the **`CI / build-test`** check run has finished. Fork PRs skip **`post-ci-status`** (same limitation as Sonar).
 
-`.github/workflows/sonarqube.yml` (`windows-latest`): runs **after** a successful **`CI`** run via `workflow_run` (not a second checkout of every `pull_request` event). It downloads the **`coverage`** artifact from that CI run, then runs `dotnet-sonarscanner begin` with OpenCover paths, `sonar.exclusions` / `sonar.coverage.exclusions`, and `sonar.qualitygate.wait=true`, followed by `dotnet build` and `scanner end`.
+`.github/workflows/sonarqube.yml` (`ubuntu-latest`, same OS as **`CI`**): runs **after** a successful **`CI`** run via `workflow_run`. It downloads **`coverage`**, runs the Sonar scanner with `sonar.qualitygate.wait=true`, then publishes **`SovereignID / SonarQube`** on the **PR branch tip**: it uses `workflow_run.pull_requests[0].head.sha` when present, otherwise **`GET /repos/.../commits/{head_sha}/pulls`** to resolve the tip (the `workflow_run` payload often omits `pull_requests`). Do **not** rely on **`SonarQube / Build and analyze`** alone for merge gating on PRs.
+
+### Block merges when Sonar fails (branch protection)
+
+1. Repository **Settings** → **Branches** (or **Rules** / rulesets) → rule for **`main`**.
+2. Enable **Require status checks to pass before merging**.
+3. Add required checks (use **+ Add checks** after a green run — do **not** type ad‑hoc names like `ci /`):
+   - **`SovereignID / CI`** (commit status from `ci.yml`; reliable gate on the PR head).
+   - **`SovereignID / SonarQube`** (commit status from `sonarqube.yml`; reliable Sonar gate on PRs).
+
+Until both complete successfully on the PR’s latest commit, GitHub will not allow merging (subject to your other rule options). **`CI / build-test`** and **`SonarQube / Build and analyze`** can stay as non‑required (informational) if the UI shows duplicate or “Expected” rows that do not merge with the Actions check.
+
+**Fork PRs:** Sonar is skipped when `head_repository` is not this repo; **`SovereignID / CI`** is not posted when the PR head is on a fork. Required checks on those contexts block fork merges unless you bypass or change the rules. Prefer branches on the upstream repo for contributor flows that must pass both gates.
 
 ### SonarCloud quality gate (`Sonar way`, free plan)
 
@@ -144,7 +156,7 @@ Optional: attach a screenshot of the project’s quality gate assignment or `Son
 
 Requires **`SONAR_TOKEN`** (SonarCloud **user** token, not a project token) in repository secrets.
 
-**PR checklist:** target `main`; wait for **`CI`** to finish (success), then confirm **`SonarQube`** succeeds on the same commit; confirm SonarCloud shows the branch without auth errors.
+**PR checklist:** target `main`; confirm **`SovereignID / CI`** and **`SovereignID / SonarQube`** are green on the PR head; confirm SonarCloud shows the branch without auth errors.
 
 ## Deploying `Notary.sol`
 
