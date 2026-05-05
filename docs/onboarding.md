@@ -127,7 +127,19 @@ Coverage outputs under `coverage/**`:
 
 `.github/workflows/ci.yml` (`ubuntu-latest`): restore, build, test with coverage (`Category!=Integration`), per-BC coverage via `ci/Check-BcCoverage.ps1`, uploads artifact **`coverage`**.
 
-`.github/workflows/sonarqube.yml` (`windows-latest`): runs **after** a successful **`CI`** run via `workflow_run` (not a second checkout of every `pull_request` event). It downloads the **`coverage`** artifact from that CI run, then runs `dotnet-sonarscanner begin` with OpenCover paths, `sonar.exclusions` / `sonar.coverage.exclusions`, and `sonar.qualitygate.wait=true`, followed by `dotnet build` and `scanner end`.
+`.github/workflows/sonarqube.yml` (`ubuntu-latest`, same OS as **`CI`**): runs **after** a successful **`CI`** run via `workflow_run`. It downloads the **`coverage`** artifact from that CI run, then runs `dotnet-sonarscanner begin` with OpenCover paths, `sonar.exclusions` / `sonar.coverage.exclusions`, and `sonar.qualitygate.wait=true`, followed by `dotnet build` and `scanner end`. A final step publishes a **commit status** `SovereignID / SonarQube` on `workflow_run.head_sha` so branch protection can require it on PRs (checks from `workflow_run` alone are not always tied to the PR head).
+
+### Block merges when Sonar fails (branch protection)
+
+1. Repository **Settings** → **Branches** (or **Rules** / rulesets) → rule for **`main`**.
+2. Enable **Require status checks to pass before merging**.
+3. Add required checks:
+   - **`CI / build-test`** (workflow **`CI`**, job **`build-test`**).
+   - **`SovereignID / SonarQube`** (commit status written by `sonarqube.yml` after analysis).
+
+Until both complete successfully on the PR’s latest commit, GitHub will not allow merging (subject to your other rule options).
+
+**Fork PRs:** the Sonar job is skipped when `head_repository` is not this repo; that status is never published, so a strict required check **`SovereignID / SonarQube`** would block merges from forks. Options: work from a branch in the upstream repo, adjust the rule, or handle fork PRs manually.
 
 ### SonarCloud quality gate (`Sonar way`, free plan)
 
@@ -144,7 +156,7 @@ Optional: attach a screenshot of the project’s quality gate assignment or `Son
 
 Requires **`SONAR_TOKEN`** (SonarCloud **user** token, not a project token) in repository secrets.
 
-**PR checklist:** target `main`; wait for **`CI`** to finish (success), then confirm **`SonarQube`** succeeds on the same commit; confirm SonarCloud shows the branch without auth errors.
+**PR checklist:** target `main`; wait for **`CI`** then **`SonarQube`** on the same commit; confirm **`SovereignID / SonarQube`** is green on the PR and SonarCloud shows the branch without auth errors.
 
 ## Deploying `Notary.sol`
 
