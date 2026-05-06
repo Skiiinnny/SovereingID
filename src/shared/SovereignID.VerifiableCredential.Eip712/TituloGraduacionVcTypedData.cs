@@ -3,7 +3,7 @@ using Nethereum.ABI.EIP712;
 using Nethereum.Signer;
 using Nethereum.Signer.EIP712;
 
-namespace SovereignID.VcSliceA.Eip712;
+namespace SovereignID.VerifiableCredential.Eip712;
 
 /// <summary>
 /// Construye <see cref="TypedData"/> y operaciones de firma / recuperación para el VC TituloGraduacion.
@@ -14,9 +14,9 @@ public static class TituloGraduacionVcTypedData
     {
         var domain = new DomainWithNameVersionAndChainId
         {
-            Name = VcSliceAEip712Constants.VcDomainName,
-            Version = VcSliceAEip712Constants.VcDomainVersion,
-            ChainId = new BigInteger(VcSliceAEip712Constants.SepoliaChainId),
+            Name = VerifiableCredentialEip712Constants.VcDomainName,
+            Version = VerifiableCredentialEip712Constants.VcDomainVersion,
+            ChainId = new BigInteger(VerifiableCredentialEip712Constants.SepoliaChainId),
         };
 
         var typedData = new TypedData<DomainWithNameVersionAndChainId>

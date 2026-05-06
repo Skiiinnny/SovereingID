@@ -8,29 +8,29 @@
 ### Requirement: Non-cryptographic shared assembly
 
 The system SHALL provide a .NET 9 class library project
-`SovereignID.VcSliceA.Document` under `src/shared/` that SHALL NOT reference
-Nethereum packages or `SovereignID.VcSliceA.Eip712`. The library MAY reference
+`SovereignID.VerifiableCredential.Document` under `src/shared/` that SHALL NOT reference
+Nethereum packages or `SovereignID.VerifiableCredential.Eip712`. The library MAY reference
 `SovereignID.SharedKernel.Domain` for canonical DID parsing rules.
 
 #### Scenario: Architecture confinement preserved
 
-- **WHEN** a maintainer inspects `SovereignID.VcSliceA.Document.csproj`
+- **WHEN** a maintainer inspects `SovereignID.VerifiableCredential.Document.csproj`
 - **THEN** no `PackageReference` to `Nethereum.*` exists and no project reference
-  to `SovereignID.VcSliceA.Eip712` exists
+  to `SovereignID.VerifiableCredential.Eip712` exists
 
 ### Requirement: Canonical proof type string ownership
 
 The literal value used for `proof.type` on issued VCs (`SovereignIDEip712Signature2026`)
-SHALL be defined exactly once in `SovereignID.VcSliceA.Document` as the
-single source of truth for JSON documents. `SovereignID.VcSliceA.Eip712`
-SHALL consume that definition (by project reference to `VcSliceA.Document`)
+SHALL be defined exactly once in `SovereignID.VerifiableCredential.Document` as the
+single source of truth for JSON documents. `SovereignID.VerifiableCredential.Eip712`
+SHALL consume that definition (by project reference to `VerifiableCredential.Document`)
 so EIP-712 helpers and JSON `proof.type` cannot drift.
 
 #### Scenario: Eip712 project references Document
 
-- **WHEN** a maintainer inspects `SovereignID.VcSliceA.Eip712.csproj`
-- **THEN** a project reference to `SovereignID.VcSliceA.Document` exists and
-  `VcSliceAEip712Constants.ProofType` resolves to the same literal as the
+- **WHEN** a maintainer inspects `SovereignID.VerifiableCredential.Eip712.csproj`
+- **THEN** a project reference to `SovereignID.VerifiableCredential.Document` exists and
+  `VerifiableCredentialEip712Constants.ProofType` resolves to the same literal as the
   document module’s public constant
 
 ### Requirement: Strict second @context vocabulary
@@ -109,7 +109,7 @@ requiring the shared library to know those prefixes.
 ### Requirement: Issuer invokes validator before integrity sign
 
 The issuer flow that builds a `TituloGraduacion` VC SHALL invoke
-`SovereignID.VcSliceA.Document` validation on the VC JSON (unsigned or per the
+`SovereignID.VerifiableCredential.Document` validation on the VC JSON (unsigned or per the
 library’s unsigned mode) and SHALL NOT proceed to EIP-712 signing when
 validation fails.
 
@@ -121,7 +121,7 @@ validation fails.
 ### Requirement: Verifier delegates VC document shape to the module
 
 The Verifier’s presentation verification path SHALL delegate VC document-shape
-and subject rules to `SovereignID.VcSliceA.Document` instead of duplicating
+and subject rules to `SovereignID.VerifiableCredential.Document` instead of duplicating
 equivalent checks in application-local static validators. Cryptographic
 EIP-712 recovery, VP-level checks, and holder/issuer address equality against
 recovered signatures remain in the Verifier assembly.
@@ -134,7 +134,7 @@ recovered signatures remain in the Verifier assembly.
 
 ### Requirement: Automated tests for the document module
 
-The system SHALL include automated tests (project `SovereignID.VcSliceA.Document.Tests`
+The system SHALL include automated tests (project `SovereignID.VerifiableCredential.Document.Tests`
 or equivalent) that cover valid golden JSON, invalid `@context`, invalid
 subject keys, invalid `awardDate`, invalid DID, and temporal failures without
 network access.
@@ -142,4 +142,4 @@ network access.
 #### Scenario: CI runs document tests without RPC
 
 - **WHEN** the test project runs in CI with no outbound blockchain access
-- **THEN** all tests in `SovereignID.VcSliceA.Document.Tests` pass
+- **THEN** all tests in `SovereignID.VerifiableCredential.Document.Tests` pass

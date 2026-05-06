@@ -1,6 +1,6 @@
 using Nethereum.Signer;
 using SovereignID.Issuer.Domain.TituloGraduacion;
-using SovereignID.VcSliceA.Eip712;
+using SovereignID.VerifiableCredential.Eip712;
 
 namespace SovereignID.Issuer.Infrastructure.TituloGraduacion;
 

@@ -33,6 +33,16 @@ over brevity. Always explain crypto concepts when they appear in code.
    with `Category!=Integration`. In-process `WebApplicationFactory` tests do
    not use that trait; see `README.md` and `openspec/specs/test-coverage-ingestion/spec.md`.
 
+6. **Domain vocabulary for new specs and seams.** When adding or extending OpenSpec
+   requirements, change folders, assembly names, or namespaces, use **domain
+   language** from `CONTEXT.md` and `openspec/specs/master-design.md` (VC, VP,
+   credential profile, document conformance, EIP-712, first increment / MVP envelope,
+   etc.). Do **not** invent new canonical identifiers such as **“Slice A”**,
+   **“Opción B”**, or arbitrary letter-coded delivery labels as the stable name of
+   a product capability or shared library. Legacy paths (`vc-slice-*`, archived
+   changes) remain historical only; **new** changes should use descriptive slugs
+   (for example `verifiable-credential-*`, `presentation-verification-*`).
+
 ## Code Conventions
 
 - Async everywhere: `Task<T>`, never `.Result` or `.Wait()`
@@ -50,6 +60,11 @@ over brevity. Always explain crypto concepts when they appear in code.
 | Verifiable Presentation | `VerifiablePresentation` |
 | Decentralized Identifier | `DecentralizedIdentifier` (or `Did`) |
 | SIWE message | `SiweMessage` (use Nethereum type) |
+
+**Specs and seams:** Names of normative paragraphs, assemblies, and public
+packages must read as architecture or domain (see table above). Planning-only
+aliases belong in prose as “primer incremento” or similar, not in folder names or
+type/namespace roots for new work.
 
 ## What NOT to do
 
@@ -73,7 +88,7 @@ None — no active folder under `openspec/changes/` (only `archive/`). For new w
 Phase 1 crypto foundations → `openspec/changes/archive/2026-04-19-phase-1-crypto-foundations/`. 
 Phase 2 — SIWE authentication → `openspec/changes/archive/2026-05-03-phase-2-siwe-auth/`. 
 Phase 3 VC — slice A (dominio + EIP-712, sin cadena/IPFS) → `openspec/changes/archive/2026-05-03-phase-3-vc-slice-a/`. 
-VC slice A — conformidad de documento (`SovereignID.VcSliceA.Document`) → `openspec/changes/archive/2026-05-03-vc-slice-a-document-conformance/`.
+Conformidad de documento VC (`SovereignID.VerifiableCredential.Document`) → `openspec/changes/archive/2026-05-03-vc-slice-a-document-conformance/`.
 SonarQube debt (Fase 2 alignment) → `openspec/changes/archive/2026-05-03-sonar-debt-phase-2/`.  
 VP envelope vs cadena embebida (verificador) → `openspec/changes/archive/2026-05-04-verifier-vp-envelope-chain-split/`.
 Sonar / cobertura / CI (`test-coverage-ingestion`) → `openspec/changes/archive/2026-05-04-sonar-coverage-phase-2/`.

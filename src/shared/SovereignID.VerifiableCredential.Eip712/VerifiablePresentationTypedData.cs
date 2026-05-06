@@ -3,7 +3,7 @@ using Nethereum.ABI.EIP712;
 using Nethereum.Signer;
 using Nethereum.Signer.EIP712;
 
-namespace SovereignID.VcSliceA.Eip712;
+namespace SovereignID.VerifiableCredential.Eip712;
 
 /// <summary>
 /// EIP-712 para la VP mínima (titular).
@@ -14,9 +14,9 @@ public static class VerifiablePresentationTypedData
     {
         var domain = new DomainWithNameVersionAndChainId
         {
-            Name = VcSliceAEip712Constants.VpDomainName,
-            Version = VcSliceAEip712Constants.VpDomainVersion,
-            ChainId = new BigInteger(VcSliceAEip712Constants.SepoliaChainId),
+            Name = VerifiableCredentialEip712Constants.VpDomainName,
+            Version = VerifiableCredentialEip712Constants.VpDomainVersion,
+            ChainId = new BigInteger(VerifiableCredentialEip712Constants.SepoliaChainId),
         };
 
         var typedData = new TypedData<DomainWithNameVersionAndChainId>

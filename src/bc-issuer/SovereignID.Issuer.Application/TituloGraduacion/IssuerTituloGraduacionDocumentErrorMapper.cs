@@ -1,4 +1,4 @@
-using SovereignID.VcSliceA.Document;
+using SovereignID.VerifiableCredential.Document;
 
 namespace SovereignID.Issuer.Application.TituloGraduacion;
 

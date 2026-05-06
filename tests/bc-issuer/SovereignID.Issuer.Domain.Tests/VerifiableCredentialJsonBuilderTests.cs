@@ -1,6 +1,6 @@
 using System.Text.Json;
 using SovereignID.Issuer.Domain.TituloGraduacion;
-using SovereignID.VcSliceA.Document;
+using SovereignID.VerifiableCredential.Document;
 
 namespace SovereignID.Issuer.Domain.Tests;
 

@@ -1,6 +1,6 @@
 using Nethereum.ABI.FunctionEncoding.Attributes;
 
-namespace SovereignID.VcSliceA.Eip712;
+namespace SovereignID.VerifiableCredential.Eip712;
 
 /// <summary>
 /// Mensaje EIP-712 primario para integridad del VC TituloGraduacion (emisor).

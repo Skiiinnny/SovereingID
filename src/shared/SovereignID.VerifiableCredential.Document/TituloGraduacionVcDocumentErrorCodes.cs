@@ -1,4 +1,4 @@
-namespace SovereignID.VcSliceA.Document;
+namespace SovereignID.VerifiableCredential.Document;
 
 /// <summary>
 /// Códigos de error canónicos (sin prefijo de bounded context) devueltos por

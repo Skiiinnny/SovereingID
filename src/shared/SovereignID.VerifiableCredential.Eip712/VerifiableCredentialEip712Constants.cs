@@ -1,11 +1,11 @@
-using SovereignID.VcSliceA.Document;
+using SovereignID.VerifiableCredential.Document;
 
-namespace SovereignID.VcSliceA.Eip712;
+namespace SovereignID.VerifiableCredential.Eip712;
 
 /// <summary>
 /// Constantes compartidas entre emisor y verificador para pruebas EIP-712 y JSON-LD <c>proof.type</c>.
 /// </summary>
-public static class VcSliceAEip712Constants
+public static class VerifiableCredentialEip712Constants
 {
     /// <summary>Tipo de prueba declarado en el documento JSON-LD (extensión de producto).</summary>
     public const string ProofType = TituloGraduacionVcDocumentConstants.ProofType;

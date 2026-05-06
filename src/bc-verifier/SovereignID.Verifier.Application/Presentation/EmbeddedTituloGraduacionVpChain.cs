@@ -1,7 +1,7 @@
 using System.Text.Json;
 using SovereignID.SharedKernel.Domain;
-using SovereignID.VcSliceA.Document;
-using SovereignID.VcSliceA.Eip712;
+using SovereignID.VerifiableCredential.Document;
+using SovereignID.VerifiableCredential.Eip712;
 
 namespace SovereignID.Verifier.Application.Presentation;
 
