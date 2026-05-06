@@ -43,17 +43,17 @@ public sealed class ArchitectureRulesTests
     }
 
     [Fact]
-    public void Issuer_Domain_References_SharedKernel_And_VcSliceA_Document()
+    public void Issuer_Domain_References_SharedKernel_And_VerifiableCredential_Document()
     {
         var allowed = new HashSet<string>(StringComparer.Ordinal)
         {
             "SovereignID.SharedKernel.Domain",
-            "SovereignID.VcSliceA.Document",
+            "SovereignID.VerifiableCredential.Document",
         };
 
         AssertOnlyAllowedProjectReferences(
             "SovereignID.Issuer.Domain",
-            "Issuer.Domain references SharedKernel.Domain and VcSliceA.Document only",
+            "Issuer.Domain references SharedKernel.Domain and VerifiableCredential.Document only",
             allowed);
     }
 
@@ -154,7 +154,7 @@ public sealed class ArchitectureRulesTests
 
             var isLegacy = name is "SovereignID.Crypto" or "SovereignID.Chain" or "SovereignID.Demo.Phase1";
             var isInfrastructure = name.EndsWith(".Infrastructure", StringComparison.Ordinal);
-            var isSharedEip712Contracts = name == "SovereignID.VcSliceA.Eip712";
+            var isSharedEip712Contracts = name == "SovereignID.VerifiableCredential.Eip712";
             if (isLegacy || isInfrastructure || isSharedEip712Contracts)
             {
                 continue;

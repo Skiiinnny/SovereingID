@@ -1,5 +1,5 @@
 using System.Text.Json;
-using SovereignID.VcSliceA.Eip712;
+using SovereignID.VerifiableCredential.Eip712;
 
 namespace SovereignID.Verifier.Application.Presentation;
 
@@ -16,7 +16,7 @@ internal static class PresentationEip712ProofValueReader
     {
         signature = "";
         errorCode = null;
-        if (!proof.TryGetProperty("type", out var t) || t.GetString() != VcSliceAEip712Constants.ProofType)
+        if (!proof.TryGetProperty("type", out var t) || t.GetString() != VerifiableCredentialEip712Constants.ProofType)
         {
             errorCode = "proof_type_invalid";
             return false;

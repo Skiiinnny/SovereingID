@@ -3,7 +3,7 @@ using System.Text.Json;
 using SovereignID.Issuer.Domain.TituloGraduacion;
 using SovereignID.SharedKernel.Application;
 using SovereignID.SharedKernel.Domain;
-using SovereignID.VcSliceA.Document;
+using SovereignID.VerifiableCredential.Document;
 
 namespace SovereignID.Issuer.Application.TituloGraduacion;
 

@@ -1,4 +1,4 @@
-namespace SovereignID.VcSliceA.Document;
+namespace SovereignID.VerifiableCredential.Document;
 
 /// <summary>
 /// Modo de validación del documento VC respecto al bloque <c>proof</c>.

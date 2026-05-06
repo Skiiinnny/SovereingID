@@ -1,9 +1,9 @@
 using System.Text.Json.Nodes;
 
-namespace SovereignID.VcSliceA.Document;
+namespace SovereignID.VerifiableCredential.Document;
 
 /// <summary>
-/// Vocabulario y literales canónicos del VC TituloGraduacion (slice A) en JSON-LD.
+/// Vocabulario y literales canónicos del VC TituloGraduacion en JSON-LD (producto cerrado).
 /// </summary>
 public static class TituloGraduacionVcDocumentConstants
 {

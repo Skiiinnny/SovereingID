@@ -1,7 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace SovereignID.VcSliceA.Document.Tests;
+using SovereignID.VerifiableCredential.Document;
+
+namespace SovereignID.VerifiableCredential.Document.Tests;
 
 public class TituloGraduacionVcDocumentValidatorTests
 {

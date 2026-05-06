@@ -4,7 +4,7 @@ using SovereignID.Issuer.Application.TituloGraduacion;
 using SovereignID.Issuer.Infrastructure.TituloGraduacion;
 using SovereignID.SharedKernel.Domain;
 using SovereignID.Verifier.Application.Presentation;
-using SovereignID.VcSliceA.Eip712;
+using SovereignID.VerifiableCredential.Eip712;
 
 namespace SovereignID.Verifier.Domain.Tests;
 
@@ -68,7 +68,7 @@ public class PresentationVerifierTests
         var sig = VerifiablePresentationTypedData.Sign(vp712, holderKey);
         vp["proof"] = new JsonObject
         {
-            ["type"] = VcSliceAEip712Constants.ProofType,
+            ["type"] = VerifiableCredentialEip712Constants.ProofType,
             ["proofPurpose"] = "authentication",
             ["verificationMethod"] = holderDid + "#controller",
             ["proofValue"] = sig,
@@ -157,7 +157,7 @@ public class PresentationVerifierTests
         };
         vp["proof"] = new JsonObject
         {
-            ["type"] = VcSliceAEip712Constants.ProofType,
+            ["type"] = VerifiableCredentialEip712Constants.ProofType,
             ["proofPurpose"] = "authentication",
             ["verificationMethod"] = holderDid + "#controller",
             ["proofValue"] = VerifiablePresentationTypedData.Sign(vp712, holderKey),

@@ -14,7 +14,7 @@ embedded VC: root object, `type` array with only `VerifiablePresentation`,
 `holder` as a canonical `did:ethr:sepolia:` string parseable by
 `EthrSepoliaDidParser`, and `verifiableCredential` as an array with exactly one
 JSON object element. That module SHALL NOT invoke
-`TituloGraduacionVcDocumentValidator` (or any `SovereignID.VcSliceA.Document`
+`TituloGraduacionVcDocumentValidator` (or any `SovereignID.VerifiableCredential.Document`
 credential-shape validator). It SHALL NOT require a `proof` property on the VP
 root.
 
@@ -39,7 +39,7 @@ on the embedded VC with `CredentialValidationMode.Signed` and maps document
 errors through the existing Verifier mapper; (2) holder vs `credentialSubject.id`
 string and address equality checks; (3) VC `proof` extraction via the shared
 helper and VC issuer EIP-712 recovery; (4) VP root `proof` presence and VP
-holder EIP-712 recovery. Cryptographic dependencies remain `SovereignID.VcSliceA.Eip712`.
+holder EIP-712 recovery. Cryptographic dependencies remain `SovereignID.VerifiableCredential.Eip712`.
 
 #### Scenario: Invalid VC document blocks VP proof check
 
@@ -53,7 +53,7 @@ Duplicated logic for reading `proof.type` and `proofValue` from a JSON `proof`
 object for both VC and VP proofs SHALL be consolidated into a single
 `internal` helper used by the embedded VC chain module (and any envelope-adjacent
 code if needed). The helper SHALL use the same `ProofType` constant as today
-(`VcSliceAEip712Constants.ProofType`) and SHALL preserve existing error codes
+(`VerifiableCredentialEip712Constants.ProofType`) and SHALL preserve existing error codes
 `proof_type_invalid`, `proof_value_missing`, and `proof_value_empty`.
 
 #### Scenario: VC and VP proofs use the same extraction rules

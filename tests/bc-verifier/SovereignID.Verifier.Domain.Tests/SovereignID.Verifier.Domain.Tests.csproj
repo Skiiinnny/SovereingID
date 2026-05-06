@@ -22,7 +22,7 @@
     <ProjectReference Include="..\..\..\src\bc-issuer\SovereignID.Issuer.Application\SovereignID.Issuer.Application.csproj" />
     <ProjectReference Include="..\..\..\src\bc-issuer\SovereignID.Issuer.Infrastructure\SovereignID.Issuer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
-    <ProjectReference Include="..\..\..\src\shared\SovereignID.VcSliceA.Eip712\SovereignID.VcSliceA.Eip712.csproj" />
+    <ProjectReference Include="..\..\..\src\shared\SovereignID.VerifiableCredential.Eip712\SovereignID.VerifiableCredential.Eip712.csproj" />
   </ItemGroup>
 
 </Project>

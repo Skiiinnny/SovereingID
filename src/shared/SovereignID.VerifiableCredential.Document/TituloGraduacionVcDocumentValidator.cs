@@ -3,10 +3,10 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using SovereignID.SharedKernel.Domain;
 
-namespace SovereignID.VcSliceA.Document;
+namespace SovereignID.VerifiableCredential.Document;
 
 /// <summary>
-/// Valida la forma del documento JSON del VC TituloGraduacion (slice A) sobre <see cref="JsonElement"/>.
+/// Valida la forma del documento JSON del VC TituloGraduacion sobre <see cref="JsonElement"/>.
 /// </summary>
 public static partial class TituloGraduacionVcDocumentValidator
 {

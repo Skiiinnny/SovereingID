@@ -25,7 +25,7 @@
     <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Domain\SovereignID.SharedKernel.Domain.csproj" />
     <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Application\SovereignID.SharedKernel.Application.csproj" />
     <ProjectReference Include="..\..\..\src\shared\SovereignID.SharedKernel.Infrastructure\SovereignID.SharedKernel.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\src\shared\SovereignID.VcSliceA.Document\SovereignID.VcSliceA.Document.csproj" />
+    <ProjectReference Include="..\..\..\src\shared\SovereignID.VerifiableCredential.Document\SovereignID.VerifiableCredential.Document.csproj" />
     <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Domain\SovereignID.Auth.Domain.csproj" />
     <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Application\SovereignID.Auth.Application.csproj" />
     <ProjectReference Include="..\..\..\src\bc-auth\SovereignID.Auth.Infrastructure\SovereignID.Auth.Infrastructure.csproj" />
